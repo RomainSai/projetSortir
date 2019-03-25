@@ -1,0 +1,68 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    encoders:
+        AppBundle\Entity\Participant:
+            algorithm: bcrypt
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    #possibilité de se connecter avec soit l'Email ou le Pseudo grace au chain_provider
+    providers:
+        chain_provider:
+            chain:
+                providers: [mail_login, pseudo_login]
+        mail_login:
+            entity:
+                class: AppBundle\Entity\Participant
+                property: mailParticipant
+        pseudo_login:
+            entity:
+                class: AppBundle\Entity\Participant
+                property: pseudo
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_ORGANISATEUR
+        ROLE_ORGANISATEUR: ROLE_USER
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            remember_me:
+                secret: '%secret%'
+                lifetime: 3600
+                path: /
+
+            pattern: ^/
+            anonymous: true
+            provider: chain_provider
+
+            form_login:
+                login_path: /login
+                check_path: /login
+
+            logout:
+                path: /logout
+                target: /
+            # activate different ways to authenticate
+
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            #http_basic: ~
+
+            # https://symfony.com/doc/current/security/form_login_setup.html
+            #form_login: ~
+
+    access_control:
+
+        - {path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY} #methode 2 : pour reguler l'accès
+        - {path: ^/ville, roles: ROLE_ADMIN}
+        - {path: ^/etat, roles: ROLE_ADMIN}
+        - {path: ^/site, roles: ROLE_ADMIN}
+        - {path: ^/, roles: ROLE_USER}
+
+
+
+

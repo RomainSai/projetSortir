@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    <h1 style="text-align: center">{{ participant.pseudo }}</h1>
+    <br><br><br>
+
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-1">
+            <img src="{{ asset(participant.getPathImage()) }}" alt="image toto">
+        </div>
+
+        <div class="col-sm-7 col-sm-offset-1">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Prenom : </th>
+                        <td>{{ participant.prenomParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Nom : </th>
+                        <td>{{ participant.nomParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Telephone : </th>
+                        <td>{{ participant.telephoneParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>E-Mail : </th>
+                        <td>{{ participant.mailParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Ville de rattachement : </th>
+                        <td>{{ participant.getSite() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!------A COPIER DANS LE FICHIER TWIG FINAL------->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+        {{ message }}
+    {% endfor %}
+    </div>
+    <!-------------------------------------------------->
+
+
+  <br><br><br>
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-4">
+            <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+                    {{ form_start(delete_form) }}
+                        <input type="submit" value="Delete">
+                    {{ form_end(delete_form) }}
+        </div>
+    </div>
+{% endblock %}

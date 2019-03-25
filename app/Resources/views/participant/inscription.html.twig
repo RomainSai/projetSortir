@@ -1,0 +1,106 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+{% block contenu %}
+    {% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+    <h1 style="text-align: center">Mon Profil</h1>
+    <br><br><br>
+
+    {{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.pseudo) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.pseudo) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.prenomParticipant) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.prenomParticipant) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.nomParticipant) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.nomParticipant) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.telephoneParticipant) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.telephoneParticipant) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.mailParticipant) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.mailParticipant) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.motDePasseParticipant.first) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.motDePasseParticipant.first) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.motDePasseParticipant.second) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.motDePasseParticipant.second) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.site) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.site) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_label(form.pathImage) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_widget(form.pathImage) }}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-2">
+            {{ form_widget(form.Enregistrer) }}
+        </div>
+        <div class="col-sm-4 col-sm-offset-1">
+            {{ form_widget(form.Annuler) }}
+        </div>
+    </div>
+
+     {{ form_end(form) }}
+
+
+
+{% endblock %}

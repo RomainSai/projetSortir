@@ -1,0 +1,39 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    <h1>Etats list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Libelle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for etat in etats %}
+            <tr>
+                <td><a href="{{ path('etat_show', { 'id': etat.id }) }}">{{ etat.id }}</a></td>
+                <td>{{ etat.libelle }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('etat_show', { 'id': etat.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('etat_edit', { 'id': etat.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('etat_new') }}">Create a new etat</a>
+        </li>
+    </ul>
+{% endblock %}

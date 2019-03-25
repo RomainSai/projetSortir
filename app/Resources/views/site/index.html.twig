@@ -1,0 +1,49 @@
+{% extends 'layout.html.twig' %}
+
+{% block css %}
+    href="{{ asset('css/site.css') }}
+{% endblock %}
+
+
+{% block contenu %}
+    <div class="container">
+        <h1>Sites list</h1>
+        <div class="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Numéro site</th>
+                    <th>Nom site</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for site in sites %}
+                    <tr>
+                        <td><a href="{{ path('site_show', { 'id': site.id }) }}">{{ site.id }}</a></td>
+                        <td>{{ site.nomSite }}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('site_show', { 'id': site.id }) }}">Détails</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('site_edit', { 'id': site.id }) }}">Modifier</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <ul>
+            <li>
+                <a href="{{ path('site_new') }}">Créer un nouveau site</a>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}

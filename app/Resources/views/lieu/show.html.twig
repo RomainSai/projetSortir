@@ -1,0 +1,44 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    <h1>Lieu</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Numéro de lieu</th>
+                <td>{{ lieu.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom du lieu</th>
+                <td>{{ lieu.nomLieu }}</td>
+            </tr>
+            <tr>
+                <th>Rue</th>
+                <td>{{ lieu.rue }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ lieu.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td>{{ lieu.longitude }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('lieu_index') }}">Retour à la liste des lieux</a>
+        </li>
+        <li>
+            <a href="{{ path('lieu_edit', { 'id': lieu.id }) }}">Modifier</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Supprimer">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

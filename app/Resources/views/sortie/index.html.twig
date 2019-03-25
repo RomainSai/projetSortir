@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Sorties list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nomsortie</th>
+                <th>Datedebutsortie</th>
+                <th>Dureesortie</th>
+                <th>Datecloture</th>
+                <th>Nbinscriptionmax</th>
+                <th>Infosortie</th>
+                <th>Urlphoto</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sortie in sorties %}
+
+            {% for participant in sortie.participants %}
+
+                sortie : {{ sortie.id }}
+                participant {{ participant.id }}<br/>
+            {% endfor %}
+
+            <tr>
+                <td><a href="{{ path('sortie_show', { 'id': sortie.id }) }}">{{ sortie.id }}</a></td>
+                <td>{{ sortie.nomSortie }}</td>
+                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ sortie.dureeSortie }}</td>
+                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ sortie.nbInscriptionMax }}</td>
+                <td>{{ sortie.infoSortie }}</td>
+                <td>{{ sortie.urlPhoto }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">edit</a>
+                        </li>
+                        <li>
+
+
+
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('sortie_new') }}">Create a new sortie</a>
+        </li>
+    </ul>
+{% endblock %}

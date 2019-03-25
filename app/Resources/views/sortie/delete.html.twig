@@ -1,0 +1,32 @@
+{% extends '../layout.html.twig' %}
+{% block contenu %}
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-5">
+            {% form_theme form 'bootstrap_4_layout.html.twig' %}
+            <h1>Annuler la sortie</h1>
+        </div>
+            <div class="row">
+                <div class="col-sm-3 col-sm-offset-5">
+                    nom de la sortie : {{ sortie.nomSortie}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 col-sm-offset-5">
+                Date de la sortie : {{ sortie.dateDebutSortie|date('Y-m-d') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3 col-sm-offset-5">
+                    Ville organisatrice : {{ sortie.site }}
+                </div>
+                </div>
+            <div class="row">
+                <div class="col-sm-3 col-sm-offset-5">
+                    Lieu : {{ sortie.lieu }}{{ sortie.lieu.rue }}{{ sortie.lieu.ville.codePostalVille }}{{ sortie.lieu.ville }}
+                </div>
+            </div>
+            {{ form(form) }}
+            <a href="{{ path('homepage') }}" class="btn btn-info">Annuler</a>
+        </div>
+    </div>
+{% endblock %}

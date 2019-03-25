@@ -1,0 +1,35 @@
+{% extends 'layout.html.twig' %}
+
+
+
+
+{% block contenu %}
+    <h1>Site</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ site.id }}</td>
+            </tr>
+            <tr>
+                <th>Nomsite</th>
+                <td>{{ site.nomSite }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('site_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('site_edit', { 'id': site.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+
+{% block css %}
+    href="{{ asset('css/lieu.css') }}
+{% endblock %}
+
+{% block contenu %}
+    <div class="container">
+        <h1>Liste des lieux</h1>
+        <div class="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Numéro de lieu</th>
+                    <th>Nom</th>
+                    <th>Rue</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for lieu in lieus %}
+                    <tr>
+                        <td><a href="{{ path('lieu_show', { 'id': lieu.id }) }}">{{ lieu.id }}</a></td>
+                        <td>{{ lieu.nomLieu }}</td>
+                        <td>{{ lieu.rue }}</td>
+                        <td>{{ lieu.latitude }}</td>
+                        <td>{{ lieu.longitude }}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('lieu_show', { 'id': lieu.id }) }}">Détail</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('lieu_edit', { 'id': lieu.id }) }}">Modifier</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <ul>
+            <li>
+                <a href="{{ path('lieu_new') }}">Créer un nouveau lieu</a>
+            </li>
+        </ul>
+
+    </div>
+
+{% endblock %}

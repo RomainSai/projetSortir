@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css?family=Srisakdi:400,700');
+
+.navbar-default {
+    background-color: #375678;
+    border-color: #ffffff;
+}
+.navbar-default .navbar-brand {
+    color: #d5c5f2;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+    color: #993ff4;
+}
+.navbar-default .navbar-text {
+    color: #d5c5f2;
+}
+.navbar-default .navbar-nav > li > a {
+    color: #d5c5f2;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #993ff4;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #993ff4;
+    background-color: #ffffff;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    color: #993ff4;
+    background-color: #ffffff;
+}
+.navbar-default .navbar-toggle {
+    border-color: #ffffff;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #ffffff;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #d5c5f2;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    border-color: #d5c5f2;
+}
+.navbar-default .navbar-link {
+    color: #d5c5f2;
+}
+.navbar-default .navbar-link:hover {
+    color: #993ff4;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #d5c5f2;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #993ff4;
+    }
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #993ff4;
+        background-color: #ffffff;
+    }
+}
+
+
+#body
+{
+    background-color: #D0F0E6;
+}
+
+#bouton_Recherche
+{
+    background-color: #375678;
+    border: none;
+    color: #d5c5f2;
+    box-shadow: 0 8px 16px 0 grey;
+}
+
+#bouton_Recherche:hover,
+#bouton_Recherche:focus
+{
+    color: #993ff4;
+}
+
+#text
+{
+font-family: 'Srisakdi', cursive;
+}
+#paragraphe
+{
+    font-family: 'Srisakdi', cursive, '700';
+    font-weight: bold;
+}
+
+#ligne
+{
+    width: 100%;
+    color: #565656;
+}
+
+#imageEni
+{
+    margin-left: 30px;
+
+}
+
+footer{
+    background: #375678;
+    position: fixed;
+    color: #d5c5f2;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    margin-top: 50px;
+}
+
+

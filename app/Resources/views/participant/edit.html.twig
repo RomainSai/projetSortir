@@ -1,0 +1,84 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    <h1 style="text-align: center">{{ participant.pseudo }}</h1>
+    <br><br><br>
+
+    {{ form_start(edit_form) }}
+
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-1">
+            <img src="{{ asset(participant.getPathImage()) }}" alt="image toto">
+        </div>
+
+        <div class="col-sm-7 col-sm-offset-1">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Pseudo : </th>
+                        <td>{{ form_widget(edit_form.pseudo) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prénom : </th>
+                        <td>{{ form_widget(edit_form.prenomParticipant) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom : </th>
+                        <td>{{ form_widget(edit_form.nomParticipant) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Téléphone : </th>
+                        <td>{{ form_widget(edit_form.telephoneParticipant) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email : </th>
+                        <td>{{ form_widget(edit_form.mailParticipant) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mot de passe : </th>
+                        <td>{{ form_widget(edit_form.motDePasseParticipant.first) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Confirmation mot de passe : </th>
+                        <td>{{ form_widget(edit_form.motDePasseParticipant.second) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Site : </th>
+                        <td>{{ form_widget(edit_form.site) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Photo de profil : </th>
+                        <td>{{ form_widget(edit_form.pathImage) }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    <br>
+    </div>
+    <br><br><br>
+        <div class="col-sm-2 col-sm-offset-1">
+            {{ form_widget(edit_form.Enregistrer) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_widget(edit_form.Annuler) }}
+        </div>
+
+
+    {{ form_end(edit_form) }}
+    <div class="row">
+
+
+        <div class="col-sm-2">
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </div>
+        <div class="col-sm-2">
+            <button>
+                <a class="link" href="{{ path('participant_index') }}">Retour à la liste</a>
+            </button>
+        </div>
+    </div>
+
+{% endblock %}

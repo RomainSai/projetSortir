@@ -1,0 +1,50 @@
+{% extends 'layout.html.twig' %}
+
+{% block css %}
+    href="{{ asset('css/ville.css') }}
+{% endblock %}
+
+{% block contenu %}
+    <div class="container">
+        <h1>Liste des villes</h1>
+        <div class="table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Numéro Ville</th>
+                    <th>Nom ville</th>
+                    <th>Codepostal ville</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ville in villes %}
+                    <tr>
+                        <td><a href="{{ path('ville_show', { 'id': ville.id }) }}">{{ ville.id }}</a></td>
+                        <td>{{ ville.nomVille }}</td>
+                        <td>{{ ville.codePostalVille }}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('ville_show', { 'id': ville.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('ville_edit', { 'id': ville.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        <ul>
+            <li>
+                <a href="{{ path('ville_new') }}">Create a new ville</a>
+            </li>
+        </ul>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends '../layout.html.twig' %}
+
+{% block hyperlien%}{% endblock %}
+{% block contenu %}
+    {% form_theme edit_form 'bootstrap_4_layout.html.twig' %}
+<div class="row">
+    {{ form_start(edit_form) }}
+    <h1>Modifier une Sortie</h1>
+
+    <div class="col-sm-2 col-sm-offset-1">
+        {{ form_label(edit_form.nomSortie) }}
+        {{ form_label(edit_form.dateDebutSortie) }}
+        {{ form_label(edit_form.dureeSortie) }}
+        {{ form_label(edit_form.dateCloture) }}
+        {{ form_label(edit_form.nbInscriptionMax) }}
+        {{ form_label(edit_form.infoSortie) }}
+    </div>
+
+    <div class="col-sm-3">
+        {{ form_widget(edit_form.nomSortie) }}
+        {{ form_widget(edit_form.dateDebutSortie) }}
+        {{ form_widget(edit_form.dureeSortie) }}
+        {{ form_widget(edit_form.dateCloture) }}
+        {{ form_widget(edit_form.nbInscriptionMax) }}
+        {{ form_widget(edit_form.infoSortie) }}
+    </div>
+
+    <div class="col-sm-2 col-sm-1">
+        {{ form_label(edit_form.site) }}
+        <br>
+        {{ form_label(edit_form.lieu) }}
+
+    </div>
+
+
+    <div class="col-sm-3">
+        {{ form_widget(edit_form.site) }}
+        {{ form_widget(edit_form.lieu) }}
+    </div>
+</div>
+
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-3">
+            <input type="submit" name="button" value="save" label="Enregistrer" />
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" name="button" value="valide" label="Publier" />
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path() }}">
+        </div>
+        <div class="col-sm-2">
+            <a href="{{ path('homepage') }}">Annuler</a>
+        </div>
+    </div>
+
+    {{ form_end(edit_form) }}
+
+
+{% endblock %}

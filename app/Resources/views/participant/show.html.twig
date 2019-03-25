@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Participant</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ participant.id }}</td>
+            </tr>
+            <tr>
+                <th>Pseudo</th>
+                <td>{{ participant.pseudo }}</td>
+            </tr>
+            <tr>
+                <th>Nomparticipant</th>
+                <td>{{ participant.nomParticipant }}</td>
+            </tr>
+            <tr>
+                <th>Prenomparticipant</th>
+                <td>{{ participant.prenomParticipant }}</td>
+            </tr>
+            <tr>
+                <th>Telephoneparticipant</th>
+                <td>{{ participant.telephoneParticipant }}</td>
+            </tr>
+            <tr>
+                <th>Mailparticipant</th>
+                <td>{{ participant.mailParticipant }}</td>
+            </tr>
+            <tr>
+                <th>Motdepasseparticipant</th>
+                <td>{{ participant.motDePasseParticipant }}</td>
+            </tr>
+            <tr>
+                <th>Administrateur</th>
+                <td>{% if participant.administrateur %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Actif</th>
+                <td>{% if participant.actif %}Yes{% else %}No{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('participant_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
