@@ -42,13 +42,11 @@
     </div>
 
 
-    <!------A COPIER DANS LE FICHIER TWIG FINAL------->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
         {{ message }}
     {% endfor %}
     </div>
-    <!-------------------------------------------------->
 
 
   <br><br><br>
@@ -56,10 +54,7 @@
         <div class="col-sm-2 col-sm-offset-4">
             <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
         </div>
-        <div class="col-sm-3 col-sm-offset-1">
-                    {{ form_start(delete_form) }}
-                        <input type="submit" value="Delete">
-                    {{ form_end(delete_form) }}
-        </div>
+
+
     </div>
 {% endblock %}

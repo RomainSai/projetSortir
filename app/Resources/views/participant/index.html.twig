@@ -3,41 +3,56 @@
 {% block body %}
     <h1>Participants list</h1>
 
+    <!--MESSAGE QUI APPARAITRA UNIQUEMENT QUAND UN PARTICIPANT AURA ETE SUPPRIME-->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+        {{ message }}
+    {% endfor %}
+    </div>
+    <br>
+
+
     <table>
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Pseudo</th>
-                <th>Nomparticipant</th>
-                <th>Prenomparticipant</th>
-                <th>Telephoneparticipant</th>
-                <th>Mailparticipant</th>
-                <th>Motdepasseparticipant</th>
-                <th>Administrateur</th>
-                <th>Actif</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Pseudo</th>
+            <th>Nom</th>
+            <th>Prenom</th>
+            <th>Telephone</th>
+            <th>E-mail</th>
+            <th>Administrateur</th>
+            <th>Actif</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for participant in participants %}
             <tr>
-                <td><a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">{{ participant.id }}</a></td>
+                <td>
+                    <a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">{{ participant.id }}</a>
+                </td>
                 <td>{{ participant.pseudo }}</td>
                 <td>{{ participant.nomParticipant }}</td>
                 <td>{{ participant.prenomParticipant }}</td>
                 <td>{{ participant.telephoneParticipant }}</td>
                 <td>{{ participant.mailParticipant }}</td>
-                <td>{{ participant.motDePasseParticipant }}</td>
-                <td>{% if participant.administrateur %}Yes{% else %}No{% endif %}</td>
-                <td>{% if participant.actif %}Yes{% else %}No{% endif %}</td>
+                <td>{% if participant.administrateur %}Oui{% else %}No{% endif %}</td>
+                <td>{% if participant.actif %}Oui{% else %}No{% endif %}</td>
                 <td>
                     <ul>
                         <li>
-                            <a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">show</a>
+                            <a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">Profil</a>
                         </li>
-                        <li>
-                            <a href="{{ path('participant_edit', { 'id': participant.id }) }}">edit</a>
-                        </li>
+
+                        <!-- L'UTILISATEUR CONNECTE AURA ACCES UNIQUEMENT A SON PROFIL POUR LE MODIFIER
+                        IL NE POURRA PAS ACCEDER AU LIEN "EDIT" DES AUTRES PARTICIPANTS-->
+                        {% if participant == app.user or is_granted('ROLE_ADMIN') %}
+                            <li>
+                                <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
+                            </li>
+                        {% endif %}
+
                     </ul>
                 </td>
             </tr>
@@ -47,7 +62,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('participant_inscription') }}">Create a new participant</a>
+            <a href="{{ path('participant_inscription') }}">Créer un nouveau participant</a>
         </li>
     </ul>
 {% endblock %}

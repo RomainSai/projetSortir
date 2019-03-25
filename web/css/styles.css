@@ -123,4 +123,13 @@ footer{
     margin-top: 50px;
 }
 
+a.link
+{
+   color: black;
+}
+
+a.link:hover
+{
+    text-decoration: none;
+}
 

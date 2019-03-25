@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Lieu;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +24,7 @@ class SortieType extends AbstractType
             ->add('infoSortie')
             ->add('urlPhoto')
             ->add('etat')
-            ->add('lieu')
+            ->add('lieu', LieuType::class)
             ->add('site')
             ->add('participant')
             ->add('participants');

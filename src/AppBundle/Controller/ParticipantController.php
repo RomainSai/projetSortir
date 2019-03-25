@@ -55,7 +55,7 @@ class ParticipantController extends Controller
 
         $participant->setAdministrateur(0);
         $participant->setActif(1);
-        $participant->setPathImage("\web\images\photoProfil\\");
+        //$participant->setPathImage("\web\images\photoProfil\Avatar_vide\\");
 
         $formInscription = $this->createForm('AppBundle\Form\ParticipantType', $participant);
 
@@ -84,7 +84,7 @@ class ParticipantController extends Controller
 
             $imageManager = new ImageManager();
             $imageOrigine = $imageManager->make($image);
-            $imageOrigine->resize(200);
+            $imageOrigine->resize(120, 150);
 
             $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
             $participant->setPathImage('/images/photoProfil/' . $filename);
@@ -139,12 +139,13 @@ class ParticipantController extends Controller
         $editForm= $this->createForm('AppBundle\Form\ParticipantType', $participant);
         $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted()&&$editForm->isValid()) {
+        if ($editForm->isSubmitted()&& $editForm->isValid()) {
 
             $passwordSale = $passwordEncoder->encodePassword($participant, $participant->getMotDePasseParticipant());
             $participant->setMotDePasseParticipant($passwordSale);
 
 
+            //Traitement de l'image
             /**
              * @var UploadedFile $image
              */
@@ -155,7 +156,7 @@ class ParticipantController extends Controller
 
             $imageManager = new ImageManager();
             $imageOrigine = $imageManager->make($image);
-            $imageOrigine->resize(200);
+            $imageOrigine->resize(120, 150);
 
             $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
             $participant->setPathImage('/images/photoProfil/' . $filename);
@@ -177,8 +178,15 @@ class ParticipantController extends Controller
 
 
     /**
-     * -------------PAS FINI CAR PERSONNES RATTACHEES A SORTIES---------------------
-     * SUPPRIMER UN PARTICIPANT
+     * SUPPRIME UN PARTICIPANT
+     *
+     * CETTE FONCTION SUPPRIMERA LA SORTIE UNIQUEMENT SI LE PARTICIPANT SUPPRIME EST L'ORGANISATEUR  (voir annotations dans
+     * Participant Entity, variable $sortie)
+     *
+     * SI LE PARTICIPANT N'EST PAS L'ORGANISATEUR, LA SORTIE NE SERA PAS SUPPRIME (voir annotations dans
+     * Participant Entity, variable $sorties  -avec s-)
+     *
+     * UTILISATION DU FORMBUILDER -> CREATION de BOUTON (supprimer le participant) POUR PLUS DE SECURITE
      * @Route("/delete/{id}", name="participant_delete")
      * @Method({"GET", "POST"})
      * @param Request $request
@@ -190,7 +198,7 @@ class ParticipantController extends Controller
     public function deleteAction(Request $request, Participant $participant, EntityManagerInterface $em)
     {
        $formBuilder = $this->createFormBuilder();
-       $formBuilder->add('suppression', SubmitType::class);
+       $formBuilder->add('Supprimer le participant', SubmitType::class);
 
        $form = $formBuilder->getForm();
 
@@ -199,7 +207,7 @@ class ParticipantController extends Controller
            $em->remove($participant);
            $em->flush();
 
-           $this->addFlash('success', 'Le participant a été supprimé');
+           $this->addFlash('success', 'Le participant a bien été supprimé');
            return $this->redirectToRoute('participant_index');
        }
 

@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+
+    <div class="row">
+        <div class="col-12">
+            <h3>Suppression d'un participant</h3>
+            {% form_theme form 'bootstrap_4_layout.html.twig' %}
+            <p>Êtes-vous sûr de vouloir supprimer le participant {{ participants.pseudo }} ?</p>
+            {{ form(form) }}
+            <a href="{{ path('participant_index') }}" class="btn btn-info">Annuler</a>
+        </div>
+    </div>
+
+{% endblock %}
+

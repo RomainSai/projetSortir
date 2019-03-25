@@ -56,7 +56,7 @@ class Participant implements UserInterface
      * @var string
      * @Assert\NotBlank()
      * @Assert\Length(min="10", max="10")
-     * @Assert\Regex(pattern="/[0-9]*$/")
+     * @Assert\Regex(pattern="/^0[0-9]*$/")
      * @ORM\Column(name="telephoneParticipant", type="string", length=20, nullable=true)
      */
     private $telephoneParticipant;
@@ -79,7 +79,7 @@ class Participant implements UserInterface
 
     /**
      * @var
-     * @Assert\Image(maxSize="2M", allowLandscape=false, maxSizeMessage="la photo ne doit pas dépasser 2Mo")
+     * @Assert\Image(maxSize="2M", allowLandscape=true, maxSizeMessage="la photo ne doit pas dépasser 2Mo")
      * @ORM\Column(name="path_image", type="string", length=255, nullable=true)
      *
      */
@@ -105,15 +105,18 @@ class Participant implements UserInterface
      */
     private $site;
 
-    /**
+    /** SORTIE QUE LE PARTICIPANT A CREEE  (le participant est l'organisateur)
+     * ON SUPPRIME LA SORTIE QUAND L'ADMINISTRATEUR SUPPRIME LE PARTICIPANT
      * @var
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Sortie", mappedBy="participant")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Sortie", mappedBy="participant", cascade={"remove"})
      */
     private $sortie;
 
     /**
+     * LES SORTIES AUXQUELLES LE PARTICIPANT S'EST INSCRIT.
+     * SI L'ADMINISTRATEUR SUPPRIME LE PARTICIPANT, LES SORTIES NE SONT PAS SUPPRIMEES
      * @var
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Sortie")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Sortie", cascade={"persist"})
      */
     private $sorties;
 

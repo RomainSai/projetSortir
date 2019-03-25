@@ -1,4 +1,4 @@
-{% extends '../layout.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block hyperlien %}{% endblock %}
 {% block contenu %}
@@ -67,15 +67,31 @@
             </table>
         </div>
         <div>
-            {% if sortie.participants.contains(app.user) %}
+            {% set compteur = 0 %}
+            {% for participant  in sortie.participants %}
+                {% set compteur = compteur+1 %}
+            {% endfor %}
+            {% if compteur == sortie.nbInscriptionMax %}
                 <div class="col-sm-3 col-sm-offset-1">
-                    <a href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+                    <p>Le nombre maximal d'inscrit a été atteint</p>
                 </div>
-            {% else %}
-                <div class="col-sm-3 col-sm-offset-1">
-                    <a href="{{ path('sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
-                </div>
+                {% if sortie.participants.contains(app.user) %}
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <a href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+                    </div>
+                {% endif %}
+                {% else %}
+                    {% if sortie.participants.contains(app.user) %}
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <a href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+                        </div>
+                    {% else %}
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <a href="{{ path('sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
+                        </div>
+                    {% endif %}
             {% endif %}
+
 
         </div>
 

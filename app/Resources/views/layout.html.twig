@@ -63,7 +63,7 @@
                     <label for="site">Site :</label>
                 </div>
                 <div class="col-sm-6">
-                    <select class="form-control" id="sel1">
+                    <select  onchange="mySecondFunction(this)" class="form-control" id="sel1">
                         {% for site in sites %}
                         <option>{{ site.nomSite }}</option>
                         {% endfor %}
@@ -149,14 +149,14 @@
                 <div class="table-responsive" style="max-height: 350px">
                     <table class="table">
                         <thead>
-                            <tr>
+                        <tr>
                             <th>Nom de la sortie</th>
                             <th>Date de la sortie</th>
                             <th>Clotûre</th>
                             <th>Inscripts/places</th>
                             <th>Etat</th>
                             <th>Organisateur</th>
-                            </tr>
+                        </tr>
                         </thead>
                         <tbody id="myTable">
                         {% for sortie in sorties %}
@@ -164,7 +164,11 @@
                                 <td>{{ sortie.nomSortie }}</td>
                                 <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{{ sortie.nbInscriptionMax }}</td>
+                                {% set compteur = 0 %}
+                                {% for participant  in sortie.participants %}
+                                    {% set compteur = compteur+1 %}
+                                {% endfor %}
+                                <td>{{ compteur }}/{{ sortie.nbInscriptionMax }}</td>
                                 <td>{{ sortie.etat }}</td>
                                 <td>{{ sortie.participant }}</td>
                                 <td>
@@ -184,7 +188,9 @@
                                             </li>
                                         {% else %}
                                             <li>
-                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">S'inscrire</a>
+                                                {% if compteur < sortie.nbInscriptionMax %}
+                                                    <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">S'inscrire</a>
+                                                {% endif %}
                                             </li>
                                         {% endif %}
 
@@ -193,7 +199,7 @@
                             </tr>
                         {% endfor %}
                         </tbody>
-                     </table>
+                    </table>
                 </div>
             </div>
         </div>
@@ -261,8 +267,7 @@
                         </tr>
                         </thead>
                         <tbody id="myTable">
-                        {% for sortie in sorties %}
-                            {% if sortie.participants.contains(app.user) %}
+                        {% for sortie in sortiesPourOrganisateur %}
                                 <tr>
                                     <td>{{ sortie.nomSortie }}</td>
                                     <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -281,9 +286,6 @@
                                         </ul>
                                     </td>
                                 </tr>
-                            {% endif %}
-
-
 
                         {% endfor %}
                         </tbody>
@@ -390,6 +392,198 @@
         </div>
     </div>
 
+    <div class="saintErblain" id="text5" style="display: none">
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="table-responsive" style="max-height: 350px">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clotûre</th>
+                            <th>Inscripts/places</th>
+                            <th>Etat</th>
+                            <th>Organisateur</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for sortie in sorties %}
+                            {% if sortie.getSite.nomSite == 'Saint-herblain' %}
+
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                {% if app.user == sortie.participant %}
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chartresBretagne" id="text6" style="display: none">
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="table-responsive" style="max-height: 350px">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clotûre</th>
+                            <th>Inscripts/places</th>
+                            <th>Etat</th>
+                            <th>Organisateur</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for sortie in sorties %}
+                            {% if sortie.getSite == 'Chartres de Bretagne' %}
+
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                {% if app.user == sortie.participant %}
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rocheSurYon" id="text7" style="display: none">
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="table-responsive" style="max-height: 350px">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clotûre</th>
+                            <th>Inscripts/places</th>
+                            <th>Etat</th>
+                            <th>Organisateur</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for sortie in sorties %}
+                            {% if sortie.getSite == 'la Roche Sur Yon' %}
+
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                {% if app.user == sortie.participant %}
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="quimper" id="text8" style="display: none">
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="table-responsive" style="max-height: 350px">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clotûre</th>
+                            <th>Inscripts/places</th>
+                            <th>Etat</th>
+                            <th>Organisateur</th>
+                        </tr>
+                        </thead>
+                        <tbody id="myTable">
+                        {% for sortie in sorties %}
+                            {% if sortie.getSite == 'Quimper' %}
+
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant}}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                {% if app.user == sortie.participant %}
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-3 col-sm-offset-1">
             <div class="form-group">
@@ -420,7 +614,62 @@
                 text1[j].style.display = 'block';
             }
         }
-    }</script>
+    }
+
+
+    function mySecondFunction(input, Nomclass) {
+
+        console.log('click');
+        var inputSite = document.getElementById('sel1');
+        var text1 = document.getElementsByClassName('sortie0');
+        var noSite = inputSite.selectedIndex;
+        var blocSaintErblain = document.getElementsByClassName('saintErblain');
+        var blocChartresBretagne = document.getElementsByClassName('chartresBretagne');
+        var blocRocheSurYon = document.getElementsByClassName('rocheSurYon');
+        var quimper = document.getElementsByClassName('quimper');
+
+        for (var i=0;i<blocSaintErblain.length;i+=1){
+            blocSaintErblain[i].style.diplay = 'none';
+            console.log('passé dans le block sainrt-erblain')
+        }
+        for (var i=0;i<blocChartresBretagne.length;i+=1){
+            blocChartresBretagne[i].style.diplay = 'none';
+        }
+        for (var i=0;i<blocRocheSurYon.length;i+=1){
+            blocRocheSurYon[i].style.diplay = 'none';
+        }
+        for (var i=0;i<quimper.length;i+=1){
+            quimper[i].style.diplay = 'none';
+        }
+
+        switch (noSite) {
+
+            case (0):
+                for (var i=0;i<blocSaintErblain.length;i+=1) {
+                    blocSaintErblain[i].style.display = 'block';
+                    text1[i].style.display = 'none';}
+                break;
+            case (1):
+                for (var i=0;i<blocChartresBretagne.length;i+=1) {
+                    blocChartresBretagne[i].style.display = 'block';
+                    text1[i].style.display = 'none';}
+                break;
+            case (2):
+                for (var i=0;i<blocRocheSurYon.length;i+=1) {
+                    blocRocheSurYon[i].style.display = 'block';
+                    text1[i].style.display = 'none';}
+                break;
+            case (3):
+                for (var i=0;i<quimper.length;i+=1) {
+                    quimper[i].style.display = 'block';
+                    text1[i].style.display = 'none';}
+                break;
+            default:
+
+                break;
+        }
+    }
+</script>
 {#------------------------------------------------Footer---------------------------------------------------------------#}
     <footer>
         <div>
