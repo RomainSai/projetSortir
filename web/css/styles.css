@@ -114,7 +114,7 @@ font-family: 'Srisakdi', cursive;
 
 footer{
     background: #375678;
-    position: fixed;
+    position: relative;
     color: #d5c5f2;
     text-align: center;
     bottom: 0;

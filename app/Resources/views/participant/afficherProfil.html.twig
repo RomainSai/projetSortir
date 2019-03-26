@@ -1,6 +1,11 @@
 {% extends 'layout.html.twig' %}
 
 {% block contenu %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+        {{ message }}
+        </div>
+    {% endfor %}
     <h1 style="text-align: center">{{ participant.pseudo }}</h1>
     <br><br><br>
 
@@ -41,20 +46,10 @@
         </div>
     </div>
 
-
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">
-        {{ message }}
-    {% endfor %}
-    </div>
-
-
   <br><br><br>
     <div class="row">
         <div class="col-sm-2 col-sm-offset-4">
-            <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
+            <a class="btn btn-primary" href="{{ path('participant_edit', { 'id': participant.id }) }}">Modifier le profil</a>
         </div>
-
-
     </div>
 {% endblock %}

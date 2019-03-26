@@ -185,8 +185,6 @@ class SortieController extends Controller
         $dateDuJour = new \DateTime();
         $dateDuJour->format('Y-m-d');
 
-
-
         if ($sortie->getParticipant() == $this->getUser()){
             if ($sortie->getDateDebutSortie() > $dateDuJour){
                 if ( $sortie->getEtat()->getId() != 5){

@@ -1,0 +1,13 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    {{ form(form) }}
+    <div class="col-sm-2">
+        <a class="btn btn-primary" href="{{ path('participant_afficherProfil', {'id': app.user.id}) }}">Retour</a>
+    </div>
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}
+

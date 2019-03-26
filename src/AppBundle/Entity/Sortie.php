@@ -79,7 +79,7 @@ class Sortie
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie", cascade="persist")
      */
     private $lieu;
 

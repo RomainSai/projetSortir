@@ -24,18 +24,24 @@
         <div class="container-fluid">
 
             <div class="navbar-header">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="{{ path('homepage') }}">
                     <img alt="Logo" src="{{ asset('images/eniphoto.jpg') }}" class="pull-left">
                     <span class="stylelogo"> &nbsp; &nbsp; Sortir.com</span>
                 </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {% block hyperlien %}
-                    <li><a href="#"><span></span> Villes</a></li>
-                    <li><a href="#"><span></span> Sites</a></li> {% endblock %}
-                <li><a href="#"><span></span> Accueil</a></li>
-                <li><a href="#"><span></span> Mon Profil</a></li>
-                <li><a href="#"><span></span> Se déconnecter</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('ville_listeVilles') }}"><span></span> Villes</a></li>
+                    <li><a href="{{ path('site_index') }}"><span></span> Sites</a></li>
+                    {% endif %}
+                {% endblock %}
+                {% if app.user  %}
+                    <li><a href="{{ path('homepage') }}"><span></span> Accueil</a></li>
+                    <li><a href="{{ path('participant_afficherProfil', {id: app.user.id}) }}"><span></span> Mon Profil</a></li>
+                    <li><a href="{{ path('logout') }}"><span></span> Se déconnecter</a></li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>
@@ -201,7 +207,7 @@
                                             {% endif %}
                                             {% if sortie.participants.contains(app.user) %}
                                                 <li>
-                                                    <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Se désister</a>
+                                                    <a href="{{ path('sortie_desister', { 'id': sortie.id }) }}">Se désister</a>
                                                 </li>
                                             {% else %}
                                                 <li>
