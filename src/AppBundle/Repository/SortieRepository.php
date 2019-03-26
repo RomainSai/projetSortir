@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Sortie;
+
 /**
  * SortieRepository
  *
@@ -10,4 +12,23 @@ namespace AppBundle\Repository;
  */
 class SortieRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function sortiesDeMoinsDunMois()
+    {
+        $dateJour = new \DateTime();
+        $dateJour->format('Y-m-d');
+
+        $em = $this->getEntityManager();
+
+        $queryBuilder = $em->createQueryBuilder();
+
+        $queryBuilder->select('sortie')
+            ->from(Sortie::class, 'sortie')
+            ->where('sortie.dateDebutSortie >= :date_now')
+            ->andWhere('sortie.dateDebutSortie > (:date_now - 90)');
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('date_now', date('Y-m-d'));
+        $sortiesDeMoinsDunMois = $query->getResult();
+        return $sortiesDeMoinsDunMois;
+    }
 }

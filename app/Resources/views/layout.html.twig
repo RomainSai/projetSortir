@@ -30,8 +30,9 @@
                 </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                {% block hyperlien%} <li><a href="#"><span></span> Villes</a></li>
-                <li><a href="#"><span></span> Sites</a></li> {% endblock %}
+                {% block hyperlien %}
+                    <li><a href="#"><span></span> Villes</a></li>
+                    <li><a href="#"><span></span> Sites</a></li> {% endblock %}
                 <li><a href="#"><span></span> Accueil</a></li>
                 <li><a href="#"><span></span> Mon Profil</a></li>
                 <li><a href="#"><span></span> Se déconnecter</a></li>
@@ -43,9 +44,21 @@
 <body>
 <div class="container-fluid">
     {% block contenu %}
+
+
+
     <div class="row">
         <div class="col-sm-9">
-
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
         <div class="col-sm-3">
             <p> Date du jour : {{ "now" | date('Y-m-d') }}</p>
@@ -63,9 +76,9 @@
                     <label for="site">Site :</label>
                 </div>
                 <div class="col-sm-6">
-                    <select  onchange="mySecondFunction(this)" class="form-control" id="sel1">
+                    <select onchange="mySecondFunction(this)" class="form-control" id="sel1">
                         {% for site in sites %}
-                        <option>{{ site.nomSite }}</option>
+                            <option>{{ site.nomSite }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -75,10 +88,10 @@
 
             <div class="row">
                 <script>
-                    $(document).ready(function(){
-                        $("#myInputSearch").on("keyup", function() {
+                    $(document).ready(function () {
+                        $("#myInputSearch").on("keyup", function () {
                             var value = $(this).val().toLowerCase();
-                            $("#myTable tr").filter(function() {
+                            $("#myTable tr").filter(function () {
                                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                             });
                         });
@@ -106,7 +119,7 @@
                     <form action="">
                         Entre:&nbsp; &nbsp;
                         <input type="date" name="debut">&nbsp;<span class="glyphicon glyphicon-calendar"> </span>
-                         &nbsp; et &nbsp;
+                        &nbsp; et &nbsp;
                         <input type="date" name="fin">&nbsp;<span class="glyphicon glyphicon-calendar"> </span>
                     </form>
                 </div>
@@ -114,24 +127,26 @@
         </div>
 
 
-
         <div class="col-sm-3">
 
             <br><br><br>
-            <div  class="checkbox">
-                <label><input type="checkbox" id="sortieQueJorganise" onclick="myFunction(this,'sorties1','sortie0')" value=""> Sorties dont je suis l'organisateur/trice</label>
+            <div class="checkbox">
+                <label><input type="checkbox" id="sortieQueJorganise" onclick="myFunction(this,'sorties1','sortie0')"
+                              value=""> Sorties dont je suis l'organisateur/trice</label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" id="sortieOuJeParticipe" onclick="myFunction(this,'sorties2','sortie0')" value="">Sorties auxquelles je suis inscrit/e</label>
+                <label><input type="checkbox" id="sortieOuJeParticipe" onclick="myFunction(this,'sorties2','sortie0')"
+                              value="">Sorties auxquelles je suis inscrit/e</label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" id="sortiePasInscript" onclick="myFunction(this,'sorties3','sortie0')" value="">Sorties auxquelles je ne suis pas inscrit/e</label>
+                <label><input type="checkbox" id="sortiePasInscript" onclick="myFunction(this,'sorties3','sortie0')"
+                              value="">Sorties auxquelles je ne suis pas inscrit/e</label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" id="sortieFinis" onclick="myFunction(this,'sorties4','sortie0')" value="">Sorties passées</label>
+                <label><input type="checkbox" id="sortieFinis" onclick="myFunction(this,'sorties4','sortie0')" value="">Sorties
+                    passées</label>
             </div>
         </div>
-
 
 
         <div class="col-sm-2 col-sm-offset-1">
@@ -160,43 +175,45 @@
                         </thead>
                         <tbody id="myTable">
                         {% for sortie in sorties %}
-                            <tr>
-                                <td>{{ sortie.nomSortie }}</td>
-                                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                {% set compteur = 0 %}
-                                {% for participant  in sortie.participants %}
-                                    {% set compteur = compteur+1 %}
-                                {% endfor %}
-                                <td>{{ compteur }}/{{ sortie.nbInscriptionMax }}</td>
-                                <td>{{ sortie.etat }}</td>
-                                <td>{{ sortie.participant }}</td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
-                                        </li>
+                            {% set dateSortie = sortie.getDateDebutSortie() %}
+                            {% if dateDuJour.diff(dateSortie).format('%R%a') >= -30 %}
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    {% set compteur = 0 %}
+                                    {% for participant  in sortie.participants %}
+                                        {% set compteur = compteur+1 %}
+                                    {% endfor %}
+                                    <td>{{ compteur }}/{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant }}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
 
-                                        {% if app.user == sortie.participant %}
-                                            <li>
-                                                <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
-                                            </li>
-                                        {% endif %}
-                                        {% if sortie.participants.contains(app.user) %}
-                                            <li>
-                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Se désister</a>
-                                            </li>
-                                        {% else %}
-                                            <li>
-                                                {% if compteur < sortie.nbInscriptionMax %}
-                                                    <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">S'inscrire</a>
-                                                {% endif %}
-                                            </li>
-                                        {% endif %}
-
-                                    </ul>
-                                </td>
-                            </tr>
+                                            {% if app.user == sortie.participant %}
+                                                <li>
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                </li>
+                                            {% endif %}
+                                            {% if sortie.participants.contains(app.user) %}
+                                                <li>
+                                                    <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Se désister</a>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    {% if compteur < sortie.nbInscriptionMax %}
+                                                        <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">S'inscrire</a>
+                                                    {% endif %}
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>
@@ -223,24 +240,24 @@
                         <tbody id="myTable">
                         {% for sortie in sorties %}
                             {% if app.user == sortie.participant %}
-                            <tr>
-                                <td>{{ sortie.nomSortie }}</td>
-                                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{{ sortie.nbInscriptionMax }}</td>
-                                <td>{{ sortie.etat }}</td>
-                                <td>{{ sortie.participant}}</td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant }}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
                         </tbody>
@@ -268,24 +285,25 @@
                         </thead>
                         <tbody id="myTable">
                         {% for sortie in sortiesPourOrganisateur %}
-                                <tr>
-                                    <td>{{ sortie.nomSortie }}</td>
-                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                    <td>{{ sortie.nbInscriptionMax }}</td>
-                                    <td>{{ sortie.etat }}</td>
-                                    <td>{{ sortie.participant}}</td>
-                                    <td>
-                                        <ul>
-                                            <li>
-                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ path('sortie_desister', { 'id': sortie.id }) }}">Se désinscrire</a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{ sortie.nomSortie }}</td>
+                                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{{ sortie.nbInscriptionMax }}</td>
+                                <td>{{ sortie.etat }}</td>
+                                <td>{{ sortie.participant }}</td>
+                                <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('sortie_desister', { 'id': sortie.id }) }}">Se
+                                                désinscrire</a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
 
                         {% endfor %}
                         </tbody>
@@ -314,25 +332,25 @@
                         {% for sortie in sorties %}
                             {% if app.user != sortie.participant %}
                                 {% if sortie.participants.contains(app.user) %}
-                                    {% else %}
-                            <tr>
-                                <td>{{ sortie.nomSortie }}</td>
-                                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{{ sortie.nbInscriptionMax }}</td>
-                                <td>{{ sortie.etat }}</td>
-                                <td>{{ sortie.participant}}</td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('sortie_inscrire', { 'id': sortie.id }) }}">S'incrire</a>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>{{ sortie.nomSortie }}</td>
+                                        <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                        <td>{{ sortie.nbInscriptionMax }}</td>
+                                        <td>{{ sortie.etat }}</td>
+                                        <td>{{ sortie.participant }}</td>
+                                        <td>
+                                            <ul>
+                                                <li>
+                                                    <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                                </li>
+                                                <li>
+                                                    <a href="{{ path('sortie_inscrire', { 'id': sortie.id }) }}">S'incrire</a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
 
                                 {% endif %}
                             {% endif %}
@@ -363,26 +381,26 @@
                         {% for sortie in sorties %}
                             {% if date()>sortie.getDateCloture %}
 
-                            <tr>
-                                <td>{{ sortie.nomSortie }}</td>
-                                <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{{ sortie.nbInscriptionMax }}</td>
-                                <td>{{ sortie.etat }}</td>
-                                <td>{{ sortie.participant}}</td>
-                                <td>
-                                    <ul>
-                                        <li>
-                                            <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
-                                        </li>
-                                        <li>
-                                            {% if app.user == sortie.participant %}
-                                                <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
-                                            {% endif %}
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>{{ sortie.nomSortie }}</td>
+                                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ sortie.nbInscriptionMax }}</td>
+                                    <td>{{ sortie.etat }}</td>
+                                    <td>{{ sortie.participant }}</td>
+                                    <td>
+                                        <ul>
+                                            <li>
+                                                <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Afficher</a>
+                                            </li>
+                                            <li>
+                                                {% if app.user == sortie.participant %}
+                                                    <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Modifier</a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
                         </tbody>
@@ -417,7 +435,7 @@
                                     <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
                                     <td>{{ sortie.nbInscriptionMax }}</td>
                                     <td>{{ sortie.etat }}</td>
-                                    <td>{{ sortie.participant}}</td>
+                                    <td>{{ sortie.participant }}</td>
                                     <td>
                                         <ul>
                                             <li>
@@ -465,7 +483,7 @@
                                     <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
                                     <td>{{ sortie.nbInscriptionMax }}</td>
                                     <td>{{ sortie.etat }}</td>
-                                    <td>{{ sortie.participant}}</td>
+                                    <td>{{ sortie.participant }}</td>
                                     <td>
                                         <ul>
                                             <li>
@@ -513,7 +531,7 @@
                                     <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
                                     <td>{{ sortie.nbInscriptionMax }}</td>
                                     <td>{{ sortie.etat }}</td>
-                                    <td>{{ sortie.participant}}</td>
+                                    <td>{{ sortie.participant }}</td>
                                     <td>
                                         <ul>
                                             <li>
@@ -561,7 +579,7 @@
                                     <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
                                     <td>{{ sortie.nbInscriptionMax }}</td>
                                     <td>{{ sortie.etat }}</td>
-                                    <td>{{ sortie.participant}}</td>
+                                    <td>{{ sortie.participant }}</td>
                                     <td>
                                         <ul>
                                             <li>
@@ -588,9 +606,9 @@
         <div class="col-sm-3 col-sm-offset-1">
             <div class="form-group">
                 <a href="{{ path('sortie_new') }}"> Créer une sortie</a>
+            </div>
         </div>
     </div>
-</div>
 </div>
 {% endblock %}
 
@@ -603,13 +621,13 @@
 
         if (check.checked == true & text != null) {
 
-            for (var i=0;i<text.length;i+=1){
+            for (var i = 0; i < text.length; i += 1) {
                 console.log('je suis rentré dans la boucle');
                 text[i].style.display = 'block';
                 text1[i].style.display = 'none';
             }
         } else if (text != null) {
-            for (var j=0;j<text.length;j+=1){
+            for (var j = 0; j < text.length; j += 1) {
                 text[j].style.display = 'none';
                 text1[j].style.display = 'block';
             }
@@ -628,41 +646,45 @@
         var blocRocheSurYon = document.getElementsByClassName('rocheSurYon');
         var quimper = document.getElementsByClassName('quimper');
 
-        for (var i=0;i<blocSaintErblain.length;i+=1){
+        for (var i = 0; i < blocSaintErblain.length; i += 1) {
             blocSaintErblain[i].style.diplay = 'none';
             console.log('passé dans le block sainrt-erblain')
         }
-        for (var i=0;i<blocChartresBretagne.length;i+=1){
+        for (var i = 0; i < blocChartresBretagne.length; i += 1) {
             blocChartresBretagne[i].style.diplay = 'none';
         }
-        for (var i=0;i<blocRocheSurYon.length;i+=1){
+        for (var i = 0; i < blocRocheSurYon.length; i += 1) {
             blocRocheSurYon[i].style.diplay = 'none';
         }
-        for (var i=0;i<quimper.length;i+=1){
+        for (var i = 0; i < quimper.length; i += 1) {
             quimper[i].style.diplay = 'none';
         }
 
         switch (noSite) {
 
             case (0):
-                for (var i=0;i<blocSaintErblain.length;i+=1) {
+                for (var i = 0; i < blocSaintErblain.length; i += 1) {
                     blocSaintErblain[i].style.display = 'block';
-                    text1[i].style.display = 'none';}
+                    text1[i].style.display = 'none';
+                }
                 break;
             case (1):
-                for (var i=0;i<blocChartresBretagne.length;i+=1) {
+                for (var i = 0; i < blocChartresBretagne.length; i += 1) {
                     blocChartresBretagne[i].style.display = 'block';
-                    text1[i].style.display = 'none';}
+                    text1[i].style.display = 'none';
+                }
                 break;
             case (2):
-                for (var i=0;i<blocRocheSurYon.length;i+=1) {
+                for (var i = 0; i < blocRocheSurYon.length; i += 1) {
                     blocRocheSurYon[i].style.display = 'block';
-                    text1[i].style.display = 'none';}
+                    text1[i].style.display = 'none';
+                }
                 break;
             case (3):
-                for (var i=0;i<quimper.length;i+=1) {
+                for (var i = 0; i < quimper.length; i += 1) {
                     quimper[i].style.display = 'block';
-                    text1[i].style.display = 'none';}
+                    text1[i].style.display = 'none';
+                }
                 break;
             default:
 
@@ -671,9 +693,9 @@
     }
 </script>
 {#------------------------------------------------Footer---------------------------------------------------------------#}
-    <footer>
-        <div>
-            &nbsp; &nbsp; &copy; ENI Ecole Mentions légales et protection des données {{ "now" | date('Y') }}
-        </div>
-    </footer>
+<footer>
+    <div>
+        &nbsp; &nbsp; &copy; ENI Ecole Mentions légales et protection des données {{ "now" | date('Y') }}
+    </div>
+</footer>
 </html>

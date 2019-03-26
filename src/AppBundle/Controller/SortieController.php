@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,8 +32,16 @@ class SortieController extends Controller
 
         $sorties = $em->getRepository('AppBundle:Sortie')->findAll();
 
+        $dateDuJour = new \DateTime();
+        $dateDuJour->format('Y-m-d');
+
+
+        /*dump(date_diff($dateDuJour, $sortie->getDateDebutSortie())->days);
+        die();*/
+
         return $this->render('sortie/index.html.twig', array(
-            'sorties' => $sorties
+            'sorties' => $sorties,
+            'dateDuJour' => $dateDuJour
         ));
     }
 
@@ -109,40 +118,47 @@ class SortieController extends Controller
      */
     public function editAction(Request $request, Sortie $sortie)
     {
-        $deleteForm = $this->createDeleteForm($sortie);
-        $editForm = $this->createForm('AppBundle\Form\SortieType', $sortie);
-        $editForm->remove('urlPhoto');
-        $editForm->remove('etat');
-        $editForm->remove('participant');
-        $editForm->remove('participants');
+        if ($sortie->getParticipant() == $this->getUser()){
+            $deleteForm = $this->createDeleteForm($sortie);
+            $editForm = $this->createForm('AppBundle\Form\SortieType', $sortie);
+            $editForm->remove('urlPhoto');
+            $editForm->remove('etat');
+            $editForm->remove('participant');
+            $editForm->remove('participants');
 
-        $editForm->handleRequest($request);
+            $editForm->handleRequest($request);
 
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $valeurButtonSubmit = ($request->request->get('button'));
-            $em = $this->getDoctrine()->getManager();
-            if ($valeurButtonSubmit == "save") {
-                $etat = $em->getRepository('AppBundle:Etat')->find(1);
-                $sortie->setEtat($etat);
-            } elseif ($valeurButtonSubmit == "valide") {
-                $etat = $em->getRepository('AppBundle:Etat')->find(2);
-                $sortie->setEtat($etat);
-            } else {
-                $etat = $em->getRepository('AppBundle:Etat')->find(5);
-                $sortie->setEtat($etat);
+            if ($editForm->isSubmitted() && $editForm->isValid()) {
+                $valeurButtonSubmit = ($request->request->get('button'));
+                $em = $this->getDoctrine()->getManager();
+                if ($valeurButtonSubmit == "save") {
+                    $etat = $em->getRepository('AppBundle:Etat')->find(1);
+                    $sortie->setEtat($etat);
+                } elseif ($valeurButtonSubmit == "valide") {
+                    $etat = $em->getRepository('AppBundle:Etat')->find(2);
+                    $sortie->setEtat($etat);
+                } else {
+                    $etat = $em->getRepository('AppBundle:Etat')->find(5);
+                    $sortie->setEtat($etat);
+                }
+                $em->persist($sortie);
+                $em->flush();
+
+                $this->addFlash('sucess', 'Sortie modifiée avec succès !');
+                return $this->redirectToRoute('homepage', array('id' => $sortie->getId()));
             }
-            $em->persist($sortie);
-            $em->flush();
 
-            return $this->redirectToRoute('homepage', array('id' => $sortie->getId()));
+            return $this->render('sortie/edit.html.twig', array(
+                'sortie' => $sortie,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+        } else{
+            $this->addFlash('error', 'Modification de la sortie réservée à l\'oganisateur !');
+            return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('sortie/edit.html.twig', array(
-            'sortie' => $sortie,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
     }
 
     /**
@@ -164,27 +180,53 @@ class SortieController extends Controller
     /**
      * @Route("/delete/{id}", name="sortie_delete")
      */
-    public function deleteAction(Request $request, EntityManagerInterface $em, sortie $sortie)
+    public function deleteAction(Request $request, EntityManagerInterface $em, Sortie $sortie)
     {
-        $formBuilder = $this->createFormBuilder();
-        $formBuilder->add('annuler la sortie', SubmitType::class);
+        $dateDuJour = new \DateTime();
+        $dateDuJour->format('Y-m-d');
 
-        $form = $formBuilder->getForm();
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            $etat = $em->getRepository('AppBundle:Etat')->find(5);
-            $sortie->setEtat($etat);
-            $em->persist($sortie);
-            $em->flush();
 
+        if ($sortie->getParticipant() == $this->getUser()){
+            if ($sortie->getDateDebutSortie() > $dateDuJour){
+                if ( $sortie->getEtat()->getId() != 5){
+                    $formBuilder = $this->createFormBuilder();
+                    $formBuilder->add('annulation', TextareaType::class, [
+                        'label'=> 'Motif d\'annulation'
+                    ]);
+                    $formBuilder->add('annuler la sortie', SubmitType::class);
+
+                    $form = $formBuilder->getForm();
+
+                    $form->handleRequest($request);
+                    if ($form->isSubmitted()) {
+                        $motifAnnulation = $form->get('annulation')->getData();
+
+                        $etat = $em->getRepository('AppBundle:Etat')->find(5);
+                        $sortie->setEtat($etat);
+                        $em->persist($sortie);
+                        $em->flush();
+
+                        $this->addFlash('success', 'La sortie a bien été annulée (motif : '.$motifAnnulation. ').');
+                        return $this->redirectToRoute('homepage');
+                    }
+                    return $this->render('sortie/delete.html.twig', [
+                        'sortie' => $sortie,
+                        'form' => $form->createView()
+                    ]);
+                }else{
+                    $this->addFlash('error', 'La sortie est déjà annulée ');
+                    return $this->redirectToRoute('homepage');
+                }
+
+            }else{
+                $this->addFlash('error', 'Il est trop tard pour supprimer la sortie '.$sortie->getNomSortie().', elle a déjà commencé !');
+                return $this->redirectToRoute('homepage');
+            }
+        }else{
+            $this->addFlash('error', 'Seul l\'organisateur de la sortie '.$sortie->getNomSortie().' peut la supprimer !');
             return $this->redirectToRoute('homepage');
         }
-        $this->addFlash('success', 'Etes-vous sur de vouloir supprimer'.$sortie);
-        return $this->render('sortie/delete.html.twig', [
-            'sortie' => $sortie,
-            'form' => $form->createView()
-        ]);
     }
 
     /**
@@ -196,14 +238,35 @@ class SortieController extends Controller
      */
     public function inscrireAction(EntityManagerInterface $em, Sortie $sortie){
 
-        $participantId = $this->getUser();
-        $participant = $em->getRepository('AppBundle:Participant')->find($participantId);
+        $dateDuJour = new \DateTime();
+        $dateDuJour->format('Y-m-d');
+        $dateCloture = $sortie->getDateCloture();
+        $dateCloture->format('Y-m-d');
 
-        $sortie->addParticipant($participant);
+        $dateSortie = $sortie->getDateDebutSortie();
+        $interval = $dateSortie->diff($dateDuJour);
+        dump($interval->format('%R%a days'));
+        die();
 
-        $em->persist($sortie);
-        $em->flush();
-        return $this->redirectToRoute('homepage');
+        if ($sortie->getEtat()->getId() == 2){
+            if ($dateCloture > $dateDuJour){
+                $participantId = $this->getUser();
+
+                $sortie->addParticipant($participantId);
+
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash('success', 'Inscription réussie !');
+                return $this->redirectToRoute('homepage');
+            }else{
+                $this->addFlash('error', 'Sortie clôturée !');
+                return $this->redirectToRoute('homepage');
+            }
+
+        }else{
+            $this->addFlash('error', 'Sortie non ouverte ! merci de réessayer prochainement');
+            return $this->redirectToRoute('homepage');
+        }
     }
 
     /**
@@ -213,13 +276,23 @@ class SortieController extends Controller
      * @Route("/{id}/seDesister", name="sortie_desister")
      */
     public function desisterAction(EntityManagerInterface $em, Sortie $sortie){
-        $participant = $this->getUser();
 
-        $sortie->removeParticipant($participant);
+        $dateDuJour= new \DateTime();
+        $dateDuJour->format('Y-m-d');
+        $dateCloture= $sortie->getDateCloture();
 
-        $em->persist($sortie);
-        $em->flush();
-        return $this->redirectToRoute('homepage');
+        if ($dateDuJour< $dateCloture) {
+            $participant = $this->getUser();
+            $sortie->removeParticipant($participant);
+            $em->persist($sortie);
+            $em->flush();
+
+            $this->addFlash('success', 'La désinscription a été bien prise en compte');
+            return $this->redirectToRoute('homepage');
+        }else{
+            $this->addFlash('error', 'Il est trop tard pour se désister');
+            return $this->redirectToRoute('homepage');
+        }
     }
 
 

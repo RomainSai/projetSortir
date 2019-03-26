@@ -14,21 +14,25 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $dateDuJour = new \DateTime();
+        $dateDuJour->format('Y-m-d');
+        $tableauSorties = array();
+
         $sites = $this->getDoctrine()->getRepository('AppBundle:Site')->findAll();
         $sorties = $this->getDoctrine()->getRepository('AppBundle:Sortie')->findAll();
+
         $participant = $this->getDoctrine()->getRepository('AppBundle:Participant')->find($this->getUser());
 
-        dump($participant);
         $sortiesPourOrganisateur = $participant->getSorties()->toArray();
-        dump($sortiesPourOrganisateur);
+
         // replace this example code with whatever you need
         return $this->render('layout.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'sites'=>$sites,
             'sorties'=>$sorties,
             'participant'=>$participant,
-            'sortiesPourOrganisateur'=>$sortiesPourOrganisateur
-
+            'sortiesPourOrganisateur'=>$sortiesPourOrganisateur,
+            'dateDuJour' =>$dateDuJour
         ]);
     }
 }
