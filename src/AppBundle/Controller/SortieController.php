@@ -118,7 +118,7 @@ class SortieController extends Controller
      */
     public function editAction(Request $request, Sortie $sortie)
     {
-        if ($sortie->getParticipant() == $this->getUser()){
+        if ($sortie->getParticipant() == $this->getUser() or $this->isGranted('ROLE_ADMIN')){
             $deleteForm = $this->createDeleteForm($sortie);
             $editForm = $this->createForm('AppBundle\Form\SortieType', $sortie);
             $editForm->remove('urlPhoto');
@@ -242,11 +242,6 @@ class SortieController extends Controller
         $dateDuJour->format('Y-m-d');
         $dateCloture = $sortie->getDateCloture();
         $dateCloture->format('Y-m-d');
-
-        $dateSortie = $sortie->getDateDebutSortie();
-        $interval = $dateSortie->diff($dateDuJour);
-        dump($interval->format('%R%a days'));
-        die();
 
         if ($sortie->getEtat()->getId() == 2){
             if ($dateCloture > $dateDuJour){

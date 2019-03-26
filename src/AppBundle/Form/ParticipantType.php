@@ -41,7 +41,10 @@ class ParticipantType extends AbstractType
                 'class'=> Site::class,
                 'choice_label'=> 'nomSite'
                 ] )
-            ->add('pathImage', FileType::class, array('data_class' =>null, 'label'=>'Photo profil'))
+            ->add('pathImage', FileType::class, array(
+                'data_class' =>null,
+                'label'=>'Photo profil',
+                'required' => false))
 
             //->add('administrateur', CheckboxType::class)
             //->add('actif',CheckboxType::class)

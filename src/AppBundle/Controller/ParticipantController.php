@@ -55,7 +55,6 @@ class ParticipantController extends Controller
 
         $participant->setAdministrateur(0);
         $participant->setActif(1);
-        //$participant->setPathImage("\web\images\photoProfil\Avatar_vide\\");
 
         $formInscription = $this->createForm('AppBundle\Form\ParticipantType', $participant);
 
@@ -69,26 +68,28 @@ class ParticipantController extends Controller
             $participant->setSalt('IlPleutIlMouille');
             $passwordSale = $passwordEncoder->encodePassword($participant, $participant->getMotDePasseParticipant());
             $participant->setMotDePasseParticipant($passwordSale);
+            dump($participant->getPathImage());
+            die();
+            if ($participant->getPathImage() == null){
+                $participant->setPathImage($this->get('kernel')->getProjectDir()."\web\images\photoProfil\Avatar_vide.png");
+            }else{
+                //Traitement de l'image
+                /**
+                 * @var UploadedFile $image
+                 */
+                $slugify = new Slugify();
+                $filename = $slugify->slugify($participant->getPseudo()) . "-" . $participant->getId() . ".jpg";
 
-            $em->persist($participant);
-            $em->flush();
+                $image = $participant->getPathImage();
 
-            //Traitement de l'image
-            /**
-             * @var UploadedFile $image
-             */
-            $slugify = new Slugify();
-            $filename = $slugify->slugify($participant->getPseudo()) . "-" . $participant->getId() . ".jpg";
+                $imageManager = new ImageManager();
+                $imageOrigine = $imageManager->make($image);
+                $imageOrigine->resize(120, 150);
 
-            $image = $participant->getPathImage();
-
-            $imageManager = new ImageManager();
-            $imageOrigine = $imageManager->make($image);
-            $imageOrigine->resize(120, 150);
-
-            $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
-            $participant->setPathImage('/images/photoProfil/' . $filename);
-
+                $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
+                $participant->setPathImage('/images/photoProfil/' . $filename);
+            }
+            
             $em->persist($participant);
             $em->flush();
 
@@ -134,46 +135,52 @@ class ParticipantController extends Controller
 
     public function editAction(Request $request, Participant $participant, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $deleteForm= $this->createDeleteForm($participant);
+        if ($this->getUser() == $participant or $this->isGranted("ROLE_ADMIN")){
+            $deleteForm= $this->createDeleteForm($participant);
 
-        $editForm= $this->createForm('AppBundle\Form\ParticipantType', $participant);
-        $editForm->handleRequest($request);
+            $editForm= $this->createForm('AppBundle\Form\ParticipantType', $participant);
+            $editForm->handleRequest($request);
 
-        if ($editForm->isSubmitted()&& $editForm->isValid()) {
+            if ($editForm->isSubmitted()&& $editForm->isValid()) {
 
-            $passwordSale = $passwordEncoder->encodePassword($participant, $participant->getMotDePasseParticipant());
-            $participant->setMotDePasseParticipant($passwordSale);
+                $passwordSale = $passwordEncoder->encodePassword($participant, $participant->getMotDePasseParticipant());
+                $participant->setMotDePasseParticipant($passwordSale);
 
 
-            //Traitement de l'image
-            /**
-             * @var UploadedFile $image
-             */
-            $slugify = new Slugify();
-            $filename = $slugify->slugify($participant->getPseudo()) . "-" . $participant->getId() . ".jpg";
+                //Traitement de l'image
+                /**
+                 * @var UploadedFile $image
+                 */
+                $slugify = new Slugify();
+                $filename = $slugify->slugify($participant->getPseudo()) . "-" . $participant->getId() . ".jpg";
 
-            $image = $participant->getPathImage();
+                $image = $participant->getPathImage();
 
-            $imageManager = new ImageManager();
-            $imageOrigine = $imageManager->make($image);
-            $imageOrigine->resize(120, 150);
+                $imageManager = new ImageManager();
+                $imageOrigine = $imageManager->make($image);
+                $imageOrigine->resize(120, 150);
 
-            $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
-            $participant->setPathImage('/images/photoProfil/' . $filename);
+                $imageOrigine->save($this->get('kernel')->getProjectDir()."\web\images\photoProfil\\".$filename);
+                $participant->setPathImage('/images/photoProfil/' . $filename);
 
-            $em->persist($participant);
-            $em->flush();
+                $em->persist($participant);
+                $em->flush();
 
-            $this->addFlash('success', 'Le participant a bien été modifié');
+                $this->addFlash('success', 'Le participant a bien été modifié');
 
-            return $this->redirectToRoute('participant_afficherProfil', array('id' =>$participant->getId()));
+                return $this->redirectToRoute('participant_afficherProfil', array('id' =>$participant->getId()));
+            }
+            return $this->render('participant/edit.html.twig', array(
+                'participant' =>$participant,
+                'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+            ));
+        }else{
+            $this->addFlash('error', 'La modification d\'un utilisateur autre que vous-même est IMPOSSIBLE');
+            return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('participant/edit.html.twig', array(
-            'participant' =>$participant,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+
    }
 
 

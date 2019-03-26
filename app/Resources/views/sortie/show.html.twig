@@ -105,6 +105,7 @@
                         <tr>
                             <th>Pseudo</th>
                             <th>Nom</th>
+                            <th>Profil</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -112,6 +113,7 @@
                         <tr>
                             <td>{{ participant.pseudo }}</td>
                             <td>{{ participant.prenomParticipant }} {{ participant.nomParticipant }}</td>
+                            <td> <a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">afficher profil</a>
                         <tr>
                             {% endfor %}
                         </tbody>
