@@ -1,0 +1,14 @@
+.imageParticipant{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.participants{
+    float: right;
+}
+
+.detail{
+    display: flex;
+    justify-content: space-between;
+}

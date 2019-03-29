@@ -33,6 +33,7 @@ class Lieu
      * @var string
      *
      * @ORM\Column(name="nomLieu", type="string", length=30)
+     *
      */
     private $nomLieu;
 
@@ -65,7 +66,8 @@ class Lieu
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ville",inversedBy="lieu")
+     *@ORM\ManyToOne(targetEntity="AppBundle\Entity\Ville",inversedBy="lieu", cascade="persist")
+     *
      */
     private $ville;
 

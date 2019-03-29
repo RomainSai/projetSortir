@@ -1,54 +1,134 @@
 {% extends 'layout.html.twig' %}
-{% block hyperlien%}{% endblock %}
+{% block hyperlien %}{% endblock %}
 {% block contenu %}
     {% form_theme form 'bootstrap_4_layout.html.twig' %}
-<div class="row">
-    {{ form_start(form) }}
-    <h2> Créer une Sortie</h2>
-        <div class="col-sm-2 col-sm-offset-1">
-            {{ form_label(form.nomSortie) }}
-            {{ form_label(form.dateDebutSortie) }}
-            {{ form_label(form.dureeSortie) }}
-            {{ form_label(form.dateCloture) }}
-            {{ form_label(form.nbInscriptionMax) }}
-            {{ form_label(form.infoSortie) }}
+    <div class="row">
+        {{ form_start(form) }}
+        <h2 style="text-align: center"> Créer une sortie</h2>
+        <br><br>
+
+        <div class="col-sm-5 col-sm-offset-1">
+            <table>
+                <tbody>
+                <tr>
+                    <th class="formulaire">Nom de la sortie : <br></th>
+                    <td>{{ form_widget(form.nomSortie) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Date et heure<br> de la sortie :</th>
+                    <td>{{ form_widget(form.dateDebutSortie) }} {{ form_errors(form.dateDebutSortie) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Date de clôture : <br></th>
+                    <td>{{ form_widget(form.dateCloture) }} {{ form_errors(form.dateCloture) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Nombres de <br>places :</th>
+                    <td>{{ form_widget(form.nbInscriptionMax) }} {{ form_errors(form.nbInscriptionMax) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Durée de <br>la sortie :</th>
+                    <td>{{ form_widget(form.dureeSortie) }} {{ form_errors(form.dureeSortie) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Description <br>et infos :</th>
+                    <td>{{ form_widget(form.infoSortie) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Site organisateur : <br></th>
+                    <td>{{ form_widget(form.site) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Ville : <br></th>
+                    <td>{{ form_widget(form.lieu.ville) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Lieu : <br></th>
+                    <td>{{ form_widget(form.lieu.nomLieu) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Rue : <br></th>
+                    <td>{{ form_widget(form.lieu.rue) }}<br></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div class="col-sm-3">
-            {{ form_widget(form.nomSortie) }}
-            {{ form_widget(form.dateDebutSortie) }}
-            {{ form_widget(form.dureeSortie) }}
-            {{ form_widget(form.dateCloture) }}
-            {{ form_widget(form.nbInscriptionMax) }}
-            {{ form_widget(form.infoSortie) }}
+        <div class="col-sm-5 col-sm-offset-1">
+            <table>
+                <tbody>
+
+                <tr>
+                    <th class="formulaire">Latitude : <br></th>
+                    <td>{{ form_widget(form.lieu.latitude, {"id": "latitude"}) }}<br></td>
+                </tr>
+                <tr>
+                    <th class="formulaire">Longitude : <br></th>
+                    <td>{{ form_widget(form.lieu.longitude, {"id": "longitude"}) }}<br></td>
+                </tr>
+                </tbody>
+            </table>
+            <br>
         </div>
 
-        <div class="col-sm-2 col-sm-1">
-            {{ form_label(form.lieu) }}
+        <div class="col-sm-5" id="mapid" style="width: 480px; height: 360px;">
             <br><br>
-            {{ form_label(form.site) }}
+            <script>
+                var mymap = L.map('mapid').setView([48.085419, -2.504711], 7.35);
 
+                L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYW50b2luZTM1NDAwIiwiYSI6ImNqdGhsdWQyejB2aHY0MGxoaWQ0OXh6eDMifQ.sh-AQTC61WKCgB67E7bV6A', {
+                    maxZoom: 18,
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    id: 'mapbox.streets'
+                }).addTo(mymap);
+                // console.log(mymap);
+                var popup = L.popup();
+                console.log(popup);
+
+                function onMapClick(e) {
+                    popup
+                        .setLatLng(e.latlng)
+                        .setContent('Vos données sont enregistrées')
+                        .openOn(mymap);
+                    putLatLonInInputs(popup._latlng);
+                }
+
+                mymap.on('click', onMapClick);
+
+                putLatLonInInputs = (dataArray) => {
+                    var longitude = dataArray.lng;
+                    var latitude = dataArray.lat;
+
+                    $("#latitude")[0].value = latitude;
+                    $("#longitude")[0].value = longitude;
+                }
+            </script>
+        </div>
+    </div>
+
+    <div class="row">
+        <br>
+        <div class="col-sm-5 col-sm-offset-1">
+            <div class="col-sm-2">
+                <input class="joliBouton" type="submit" name="button" value="Créer" label="Enregistrer"/>
+            </div>
+            <div class="col-sm-2 col-sm-offset-2">
+                <input id="btnPublier" class="joliBouton" type="submit" name="button" value="Ouvrir" label="Publier"/>
+            </div>
+            <div class="col-sm-2 col-sm-offset-2">
+                <button class="joliBouton">
+                    <a class="link1" href="{{ path('homepage') }}">Annuler</a>
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
 
         </div>
-
-        <div class="col-sm-3">
-            {{ form_widget(form.lieu) }}
-            {{ form_widget(form.site) }}
-
-        </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-3 col-sm-offset-1">
-        <input type="submit" name="button" value="save" label="Enregistrer" />
     </div>
-    <div class="col-sm-3">
-        <input type="submit" name="button" value="valide" label="Publier" />
-    </div>
-    <div class="col-sm-3">
-        <a href="{{ path('homepage') }}">Annuler</a>
-    </div>
-</div>
     {#<ul>
         <li>
             <a href="{{ path('sortie_index') }}">Back to the list</a>

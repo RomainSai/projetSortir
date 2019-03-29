@@ -2,156 +2,144 @@
 
 {% block hyperlien %}{% endblock %}
 {% block contenu %}
+    <link rel="stylesheet" href="{{ asset('css/afficherprofile.css') }}">
     <div class="row">
-        <h1> afficher une Sortie</h1>
+        <h2 style="text-align: center">Sortie : {{ sortie.nomSortie }}</h2>
     </div>
-    <div class="row">
-        <div class="col-sm-5 col-sm-offset-2">
-            <table>
-                <tr>
-                    <th> Nom de la sortie :</th>
-                    <td>{{ sortie.nomSortie }}</td>
-                    <br><br>
-                </tr>
-                <tr>
-                    <th>Date de debut de la sortie :</th>
-                    <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
-                </tr>
-                <tr>
-                    <th>Date de fin d'inscription :</th>
-                    <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
-                </tr>
-                <tr>
-                    <th>Nombre de participants max :</th>
-                    <td>{{ sortie.nbInscriptionMax }}</td>
-                </tr>
-                <tr>
-                    <th>Duree de la sortie :</th>
-                    <td>{{ sortie.dureeSortie }}</td>
-                </tr>
-                <tr>
-                    <th>Description et Infos :</th>
-                    <td>{{ sortie.infoSortie }}</td>
-                </tr>
-            </table>
-        </div>
+    <div class="container">
+        <div class="col-sm-offset-1 col-sm-10 col-sm-offset-1 col-xs-12 detail">
+            <div class="col-sm-6 col-xs-12">
+                <table>
+                    <tr>
+                        <th> Nom de la sortie :</th>
+                        <td>{{ sortie.nomSortie }}</td>
 
-        <div class="col-sm-5">
-            <table>
-                <tr>
-                    <th> Ville Organisatrice</th>
-                    <td>{{ sortie.lieu.ville }}</td>
-                    <br><br>
-                </tr>
-                <tr>
-                    <th> Lieu</th>
-                    <td>{{ sortie.lieu }}</td>
-                </tr>
-                <tr>
-                    <th> Rue</th>
-                    <td> {{ sortie.lieu.rue }} </td>
-                </tr>
-                <tr>
-                    <th> Code postal</th>
-                    <td>{{ sortie.lieu.ville.codePostalVille }}</td>
-                </tr>
-                <tr>
-                    <th>Latitude</th>
-                    <td>{{ sortie.lieu.latitude }}</td>
-                </tr>
-                <tr>
-                    <th>Longitude</th>
-                    <td>{{ sortie.lieu.longitude }}</td>
-                </tr>
+                    </tr>
+                    <tr>
+                        <th>Date de debut de la sortie :</th>
+                        <td>{% if sortie.dateDebutSortie %}{{ sortie.dateDebutSortie|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Date de fin d'inscription :</th>
+                        <td>{% if sortie.dateCloture %}{{ sortie.dateCloture|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de participants max :</th>
+                        <td>{{ sortie.nbInscriptionMax }}</td>
+                    </tr>
+                    <tr>
+                        <th>Duree de la sortie :</th>
+                        <td>{{ sortie.dureeSortie }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description et Infos :</th>
+                        <td>{{ sortie.infoSortie }}</td>
+                    </tr>
+                </table>
+            </div>
 
-            </table>
+            <div class="col-sm-6">
+                <table>
+                    <tr>
+                        <th> Ville Organisatrice :</th>
+                        <td>{{ sortie.lieu.ville }}</td>
+                    </tr>
+                    <tr>
+                        <th> Lieu :</th>
+                        <td>{{ sortie.lieu }}</td>
+                    </tr>
+                    <tr>
+                        <th> Rue :</th>
+                        <td> {{ sortie.lieu.rue }} </td>
+                    </tr>
+                    <tr>
+                        <th> Code postal :</th>
+                        <td>{{ sortie.lieu.ville.codePostalVille }}</td>
+                    </tr>
+                    <tr>
+                        <th>Latitude :</th>
+                        <td>{{ sortie.lieu.latitude }}</td>
+                    </tr>
+                    <tr>
+                        <th>Longitude :</th>
+                        <td>{{ sortie.lieu.longitude }}</td>
+                    </tr>
+
+                </table>
+            </div>
         </div>
-        <div>
-            {% set compteur = 0 %}
-            {% for participant  in sortie.participants %}
-                {% set compteur = compteur+1 %}
-            {% endfor %}
-            {% if compteur == sortie.nbInscriptionMax %}
-                <div class="col-sm-3 col-sm-offset-1">
-                    <p>Le nombre maximal d'inscrit a été atteint</p>
+    </div>
+    <div class="container">
+        <div class=" col-sm-12 imageParticipant">
+            <div class="col-sm-6 col-xs-12">
+                <div class="" id="mapid" style="width: 380px; height: 260px;">
+                    <script>
+                        window.onload = function () {
+                            console.log('Page chargée');
+                            let mymap = L.map('mapid').setView([{{ sortie.lieu.latitude }},{{ sortie.lieu.longitude }}], 13.25);
+                            let marker = L.marker([{{ sortie.lieu.latitude }},{{ sortie.lieu.longitude }}]).addTo(mymap);
+                            let tileStreets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                                maxZoom: 18,
+                                id: 'mapbox.streets',
+                                accessToken: 'pk.eyJ1IjoiYW50b2luZTM1NDAwIiwiYSI6ImNqdGhsdWQyejB2aHY0MGxoaWQ0OXh6eDMifQ.sh-AQTC61WKCgB67E7bV6A'
+                            });
+                            tileStreets.addTo(mymap);
+                        };
+                        mymap.on('click', onMapClick);
+                    </script>
                 </div>
-                {% if sortie.participants.contains(app.user) %}
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <a href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+            </div>
+
+            <div class="col-sm-6 col-xs-12 participants">
+                <div class="col-sm-12" style="text-align: center">
+                    <div class="table-responsive">
+                        <h3>Listes des participants</h3>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Pseudo</th>
+                                <th>Nom</th>
+                                <th>Profil</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for participant in participants %}
+                            <tr>
+                                <td>{{ participant.pseudo }}</td>
+                                <td>{{ participant.prenomParticipant }} {{ participant.nomParticipant }}</td>
+                                <td><a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">afficher
+                                        profil</a>
+                            <tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
-                {% endif %}
-                {% else %}
-                    {% if sortie.participants.contains(app.user) %}
-                        <div class="col-sm-3 col-sm-offset-1">
-                            <a href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
-                        </div>
-                    {% else %}
-                        <div class="col-sm-3 col-sm-offset-1">
-                            <a href="{{ path('sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
-                        </div>
-                    {% endif %}
-            {% endif %}
-
-
-        </div>
-
-
-        <div class="row">
-            <div class="col-sm-4 col-sm-offset-1">
-                <br><br><br><br>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Pseudo</th>
-                            <th>Nom</th>
-                            <th>Profil</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for participant in participants %}
-                        <tr>
-                            <td>{{ participant.pseudo }}</td>
-                            <td>{{ participant.prenomParticipant }} {{ participant.nomParticipant }}</td>
-                            <td> <a href="{{ path('participant_afficherProfil', { 'id': participant.id }) }}">afficher profil</a>
-                        <tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-            <div class="col-sm-6" id="mapid" style="width: 480px; height: 360px;">
-                <br><br>
-                <script>
-                    window.onload = function () {
-                        console.log('Page chargée');
-                        let mymap = L.map('mapid').setView([{{ sortie.lieu.latitude }},{{ sortie.lieu.longitude }}], 13.25);
-                        let marker = L.marker([{{ sortie.lieu.latitude }},{{ sortie.lieu.longitude }}]).addTo(mymap);
-                        let tileStreets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                            maxZoom: 18,
-                            id: 'mapbox.streets',
-                            accessToken: 'pk.eyJ1IjoiYW50b2luZTM1NDAwIiwiYSI6ImNqdGhsdWQyejB2aHY0MGxoaWQ0OXh6eDMifQ.sh-AQTC61WKCgB67E7bV6A'
-                        });
-                        tileStreets.addTo(mymap);
-                    };
-                    mymap.on('click', onMapClick);
-                </script>
             </div>
         </div>
     </div>
 
-    {#<ul>
-        <li>
-            <a href="{{ path('sortie_index') }}">Back to the list</a>
-         </li>
-        <li>
-            <a href="{{ path('sortie_edit', { 'id': sortie.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-             <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>#}
+
+    <br><br>
+
+    <div class="row" style="text-align: center">
+        {% set compteur = 0 %}
+        {% for participant  in sortie.participants %}
+            {% set compteur = compteur+1 %}
+        {% endfor %}
+        {% if compteur == sortie.nbInscriptionMax %}
+            <p class="btn btn-primary">Le nombre maximal d'inscrit a été atteint</p>
+            {% if sortie.participants.contains(app.user) %}
+                <a class="btn btn-primary" href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+            {% endif %}
+        {% else %}
+            {% if sortie.participants.contains(app.user) %}
+                <a class="btn btn-primary" href="{{ path('sortie_desister', {'id': sortie.id}) }}">Se désister</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path('sortie_inscrire', {'id': sortie.id}) }}">S'inscrire</a>
+            {% endif %}
+        {% endif %}
+    </div>
+
 {% endblock %}

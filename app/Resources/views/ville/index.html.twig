@@ -11,9 +11,9 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Numéro Ville</th>
-                    <th>Nom ville</th>
-                    <th>Codepostal ville</th>
+                    <th>Id</th>
+                    <th>Ville</th>
+                    <th>Codepostal</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -29,7 +29,7 @@
                                     <a href="{{ path('ville_show', { 'id': ville.id }) }}">show</a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('ville_edit', { 'id': ville.id }) }}">edit</a>
+                                    <a href="{{ path('ville_edit', {'id': ville.id}) }}">edit</a>
                                 </li>
                             </ul>
                         </td>

@@ -54,6 +54,11 @@ class SortieController extends Controller
     public function newAction(Request $request)
     {
         $sortie = new Sortie();
+		 /**
+         * On set la date de début à aujourd'hui et la date de clotûre au lendemain (par défaut)
+         */
+        $sortie->setDateDebutSortie(new \DateTime('now'));
+        $sortie->setDateCloture(new \DateTime('tomorrow'));
         $form = $this->createForm('AppBundle\Form\SortieType', $sortie);
         $form->remove('urlPhoto');
         $form->remove('etat');
@@ -68,10 +73,10 @@ class SortieController extends Controller
             $organisateur = $this->getUser();
             $sortie->setParticipant($organisateur);
             $sortie->addParticipant($organisateur);
-            if ($valeurButtonSubmit == "save") {
+            if ($valeurButtonSubmit == "Créer") {
                 $etat = $em->getRepository('AppBundle:Etat')->find(1);
                 $sortie->setEtat($etat);
-            } elseif ($valeurButtonSubmit == "valide") {
+            } elseif ($valeurButtonSubmit == "Ouvrir") {
                 $etat = $em->getRepository('AppBundle:Etat')->find(2);
                 $sortie->setEtat($etat);
             };
@@ -132,10 +137,10 @@ class SortieController extends Controller
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 $valeurButtonSubmit = ($request->request->get('button'));
                 $em = $this->getDoctrine()->getManager();
-                if ($valeurButtonSubmit == "save") {
+                if ($valeurButtonSubmit == "Créer") {
                     $etat = $em->getRepository('AppBundle:Etat')->find(1);
                     $sortie->setEtat($etat);
-                } elseif ($valeurButtonSubmit == "valide") {
+                } elseif ($valeurButtonSubmit == "Ouverte") {
                     $etat = $em->getRepository('AppBundle:Etat')->find(2);
                     $sortie->setEtat($etat);
                 } else {
@@ -236,30 +241,36 @@ class SortieController extends Controller
      * @Route("/{id}/inscrire", name="sortie_inscrire")
      *
      */
-    public function inscrireAction(EntityManagerInterface $em, Sortie $sortie){
+    public function inscrireAction(EntityManagerInterface $em, Sortie $sortie)
+    {
 
         $dateDuJour = new \DateTime();
         $dateDuJour->format('Y-m-d');
         $dateCloture = $sortie->getDateCloture();
         $dateCloture->format('Y-m-d');
 
-        if ($sortie->getEtat()->getId() == 2){
-            if ($dateCloture > $dateDuJour){
-                $participantId = $this->getUser();
+        if ($sortie->getEtat() != null) {
+            if ($sortie->getEtat()->getId() == 2) {
+                if ($dateCloture > $dateDuJour) {
+                    $participantId = $this->getUser();
 
-                $sortie->addParticipant($participantId);
+                    $sortie->addParticipant($participantId);
 
-                $em->persist($sortie);
-                $em->flush();
-                $this->addFlash('success', 'Inscription réussie !');
-                return $this->redirectToRoute('homepage');
-            }else{
-                $this->addFlash('error', 'Sortie clôturée !');
+                    $em->persist($sortie);
+                    $em->flush();
+                    $this->addFlash('success', 'Inscription réussie !');
+                    return $this->redirectToRoute('homepage');
+                } else {
+                    $this->addFlash('error', 'Sortie clôturée !');
+                    return $this->redirectToRoute('homepage');
+                }
+
+            } else {
+                $this->addFlash('error', 'Sortie non ouverte ! merci de réessayer prochainement');
                 return $this->redirectToRoute('homepage');
             }
-
-        }else{
-            $this->addFlash('error', 'Sortie non ouverte ! merci de réessayer prochainement');
+        } else {
+            $this->addFlash('error', 'Sortie non ouverte ! (état non renseigné. Merci de réessayer prochainement)');
             return $this->redirectToRoute('homepage');
         }
     }

@@ -1,60 +1,73 @@
 {% extends 'layout.html.twig' %}
 
 {% block contenu %}
-    <h1 style="text-align: center">{{ participant.pseudo }}</h1>
-    <br><br><br>
-
-    <div class="row">
-        <div class="col-sm-3 col-sm-offset-1">
-            <img src="{{ asset(participant.getPathImage()) }}" alt="image toto">
-        </div>
-
-        <div class="col-sm-7 col-sm-offset-1">
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Prenom : </th>
-                        <td>{{ participant.prenomParticipant }}</td>
-                    </tr>
-                    <br>
-                    <tr>
-                        <th>Nom : </th>
-                        <td>{{ participant.nomParticipant }}</td>
-                    </tr>
-                    <br>
-                    <tr>
-                        <th>Telephone : </th>
-                        <td>{{ participant.telephoneParticipant }}</td>
-                    </tr>
-                    <br>
-                    <tr>
-                        <th>E-Mail : </th>
-                        <td>{{ participant.mailParticipant }}</td>
-                    </tr>
-                    <br>
-                    <tr>
-                        <th>Ville de rattachement : </th>
-                        <td>{{ participant.getSite() }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-
+    <!-- MESSAGE AFFICHE SI CREATION D'UN NOUVEl UTILISATEUR-->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
         {{ message }}
     {% endfor %}
     </div>
+<h2 style="text-align: center">{{ participant.pseudo }}</h2>
+<br><br><br>
 
-
-  <br><br><br>
-    <div class="row">
-        <div class="col-sm-2 col-sm-offset-4">
-            <a href="{{ path('participant_edit', { 'id': participant.id }) }}">Edit</a>
-        </div>
-
-
+<div class="row">
+    <div class="col-sm-3 col-sm-offset-1">
+        <img src="{{ asset(participant.getPathImage()) }}" alt="image profil">
     </div>
-{% endblock %}
+
+    <div class="col-sm-7 col-sm-offset-1">
+        <table>
+            <tbody>
+            <tr>
+                <th>Prenom :</th>
+                <td>{{ participant.prenomParticipant }}</td>
+            </tr>
+            <br>
+            <tr>
+                <th>Nom :</th>
+                <td>{{ participant.nomParticipant }}</td>
+            </tr>
+            <br>
+            <tr>
+                <th>Telephone :</th>
+                <td>{{ participant.telephoneParticipant }}</td>
+            </tr>
+            <br>
+            <tr>
+                <th>E-Mail :</th>
+                <td>{{ participant.mailParticipant }}</td>
+            </tr>
+            <br>
+            <tr>
+                <th>Ville de rattachement :</th>
+                <td>{{ participant.getSite() }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br><br><br>
+
+
+
+
+<br><br><br>
+<!-- L'UTILISATEUR CONNECTE AURA ACCES UNIQUEMENT A SON PROFIL POUR LE MODIFIER
+IL NE POURRA PAS ACCEDER AU LIEN "EDIT" DES AUTRES PARTICIPANTS-->
+<div class="row">
+    <div class="col-sm-offset-3 col-sm-6 col-sm-offset-3">
+        <div class="col-sm-2">
+            {% if participant == app.user or is_granted('ROLE_ADMIN') %}
+                <div class="col-sm-2 col-sm-offset-4">
+                    <a class="btn btn-primary" href="{{ path('participant_edit', { 'id': participant.id }) }}">Modifier le profil</a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-sm-2 col-sm-offset-4">
+            <div class="col-sm-2 col-sm-offset-4">
+                <a class="btn btn-primary" href="{{ path('homepage')}}">Afficher les sorties</a>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock %}

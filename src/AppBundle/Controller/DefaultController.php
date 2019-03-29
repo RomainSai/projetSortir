@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use http\Client\Curl\User;
+use AppBundle\Entity\Sortie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,14 +16,20 @@ class DefaultController extends Controller
     {
         $dateDuJour = new \DateTime();
         $dateDuJour->format('Y-m-d');
-        $tableauSorties = array();
-
         $sites = $this->getDoctrine()->getRepository('AppBundle:Site')->findAll();
-        $sorties = $this->getDoctrine()->getRepository('AppBundle:Sortie')->findAll();
-
         $participant = $this->getDoctrine()->getRepository('AppBundle:Participant')->find($this->getUser());
 
-        $sortiesPourOrganisateur = $participant->getSorties()->toArray();
+        $dateDebut = $request->request->get('debut');
+        $dateFin = $request->request->get('fin');
+        unset($_POST);
+
+        if(empty($dateFin)&& empty($dateFin)){
+            $sorties = $this->getDoctrine()->getRepository('AppBundle:Sortie')->findAll();
+        } else{
+            $em = $this->getDoctrine()->getManager();
+            $repoSortie = $em->getRepository(Sortie::class);
+            $sorties = $repoSortie->trouverSortiesEntreDeuxDates($dateDebut,$dateFin);
+        }
 
         // replace this example code with whatever you need
         return $this->render('layout.html.twig', [
@@ -31,7 +37,6 @@ class DefaultController extends Controller
             'sites'=>$sites,
             'sorties'=>$sorties,
             'participant'=>$participant,
-            'sortiesPourOrganisateur'=>$sortiesPourOrganisateur,
             'dateDuJour' =>$dateDuJour
         ]);
     }

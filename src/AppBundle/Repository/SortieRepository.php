@@ -31,4 +31,21 @@ class SortieRepository extends \Doctrine\ORM\EntityRepository
         $sortiesDeMoinsDunMois = $query->getResult();
         return $sortiesDeMoinsDunMois;
     }
+
+    public function trouverSortiesEntreDeuxDates($dateDebut, $dateFin)
+    {
+        $em = $this->getEntityManager();
+        $queryBuilder = $em->createQueryBuilder();
+        $queryBuilder->select('sorties')
+            ->from(Sortie::class,'sorties')
+            ->where("sorties.dateDebutSortie > ?1")
+            ->andWhere("sorties.dateDebutSortie < ?2");
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter(1, $dateDebut);
+        $query->setParameter(2, $dateFin);
+        $results = $query->getResult();
+        return $results;
+
+    }
 }

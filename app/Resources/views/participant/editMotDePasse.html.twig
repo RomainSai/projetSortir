@@ -1,0 +1,37 @@
+{% extends 'layout.html.twig' %}
+
+{% block contenu %}
+    <h2 style="text-align: center">{{ participant.pseudo }}</h2>
+    <br>
+    <h2 style="text-align: center">Modifier Mot de Passe</h2>
+
+    {# Message erreur et success #}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+
+    <div class="row">
+        <div class="container">
+            <div>
+                {{ form(form) }}
+            </div>
+            <div class="">
+                <a class="btn btn-primary" href="{{ path('participant_afficherProfil', {'id': app.user.id}) }}">Retour</a>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block body %}
+
+{% endblock %}

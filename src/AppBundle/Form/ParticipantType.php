@@ -49,8 +49,8 @@ class ParticipantType extends AbstractType
             //->add('administrateur', CheckboxType::class)
             //->add('actif',CheckboxType::class)
 
-            ->add('Enregistrer', SubmitType::class)
-            ->add('Annuler', SubmitType::class);
+            ->add('Enregistrer', SubmitType::class);
+//            ->add('Annuler', SubmitType::class);
 
     }
     /**

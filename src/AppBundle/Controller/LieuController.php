@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Lieu;
+use AppBundle\Entity\Ville;
+use AppBundle\Form\VilleType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +45,7 @@ class LieuController extends Controller
         $form = $this->createForm('AppBundle\Form\LieuType', $lieu);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($lieu);
@@ -53,7 +56,7 @@ class LieuController extends Controller
 
         return $this->render('lieu/new.html.twig', array(
             'lieu' => $lieu,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ));
     }
 

@@ -19,16 +19,22 @@ class SecurityController extends Controller
      * @Route("/login", name="login")
      */
     public function loginAction(AuthenticationUtils $authenticationUtils){
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+        if ($error){
+            $this->addFlash('error', 'Mot de passe et/ou login incorrect !');
+            return $this->redirectToRoute('login');
+        } else{
+            return $this->render('participant/login.html.twig', ['error'=>$error, 'lastUsername'=>$lastUsername]);
+        }
 
-        return $this->render('participant/login.html.twig', ['error'=>$error, 'lastUsername'=>$lastUsername]);
     }
 
     /**
      * @Route("/logout", name="logout")
      */
     public function logoutAction(){
-
+        return $this->redirectToRoute('login');
     }
 }

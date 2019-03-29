@@ -2,10 +2,21 @@
 
 {% block contenu %}
     {% if error %}
-        <div class="alert-danger">
+        <div class="alert-danger" style="margin-top: 20px">
             {{ error.messageKey|trans(error.messageData('security')) }}
         </div>
     {% endif %}
+    {# Message erreur et success #}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger" style="margin-top: 20px">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success" style="margin-top: 20px" >
+            {{ message }}
+        </div>
+    {% endfor %}
 
     <div class="col-sm-6 col-sm-offset-3">
         <form action="" method="post">

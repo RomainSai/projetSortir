@@ -40,10 +40,10 @@ class VilleController extends Controller
     public function newAction(Request $request)
     {
         $ville = new Ville();
-        $form = $this->createForm('AppBundle\Form\VilleType', $ville);
-        $form->handleRequest($request);
+        $formVille = $this->createForm('AppBundle\Form\VilleType', $ville);
+        $formVille->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formVille->isSubmitted() && $formVille->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($ville);
             $em->flush();
@@ -53,7 +53,7 @@ class VilleController extends Controller
 
         return $this->render('ville/new.html.twig', array(
             'ville' => $ville,
-            'form' => $form->createView(),
+            'formVille' => $formVille->createView(),
         ));
     }
 
@@ -76,7 +76,7 @@ class VilleController extends Controller
     /**
      * Displays a form to edit an existing ville entity.
      *
-     * @Route("/{id}/edit", name="edit")
+     * @Route("/edit/{id}", name="edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, Ville $ville)

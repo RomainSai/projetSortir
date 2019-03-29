@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Sortie
@@ -13,6 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Sortie
 {
+
+
+
     /**
      * @var int
      *
@@ -24,6 +28,7 @@ class Sortie
 
     /**
      * @var string
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="nomSortie", type="string", length=30)
      */
@@ -31,20 +36,32 @@ class Sortie
 
     /**
      * @var \DateTime
-     *
+     * @Assert\GreaterThanOrEqual(
+     *     "today",
+     *     message="La sortie ne peut commencer avant la date du jour."
+     * )
      * @ORM\Column(name="dateDebutSortie", type="datetime")
      */
     private $dateDebutSortie;
 
     /**
      * @var int
-     *
+     * @Assert\Range(
+     *     min="5",
+     *     max="4320",
+     *     minMessage="La durée doit être au minimum de {{ limit }} minutes.",
+     *     maxMessage="La durée doit être au maximum de {{ limit }} minutes, soit 3 jours."
+     * )
      * @ORM\Column(name="dureeSortie", type="integer", nullable=true)
      */
     private $dureeSortie;
 
     /**
      * @var \DateTime
+     * @Assert\GreaterThan(
+     *     "today",
+     *     message="La date de clotûre doit être supérieur à la date du jour"
+     * )
      *
      * @ORM\Column(name="dateCloture", type="datetime")
      */
@@ -52,14 +69,19 @@ class Sortie
 
     /**
      * @var int
-     *
+     * @Assert\Range(
+     *     min=1,
+     *     max=100,
+     *     minMessage="Le nombre d'inscription doit être au minimum de {{ limit }} personne.",
+     *     maxMessage="Le nombre doit être au maximum de {{ limit }} personnes."
+     * )
      * @ORM\Column(name="nbInscriptionMax", type="integer")
      */
     private $nbInscriptionMax;
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="infoSortie", type="text", nullable=true)
      */
     private $infoSortie;
@@ -79,14 +101,16 @@ class Sortie
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie")
+     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie", cascade={"persist"})
      */
     private $lieu;
 
 
     /**
      * @var
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Site", inversedBy="sortie")
+     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Site", inversedBy="sortie", cascade={"persist"})
      */
     private $site;
 
