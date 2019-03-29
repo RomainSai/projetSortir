@@ -15,7 +15,6 @@
             <table>
                 <tbody>
                 <tr>
-<<<<<<< HEAD
                     <th class="formulaire">Pseudo :</th>
                     <td>{{ form_widget(edit_form.pseudo) }}</td>
                 </tr>
@@ -41,41 +40,6 @@
                 </tr>
                 <tr>
                     <th class="formulaire">Photo de profil :</th>
-=======
-                    <th>Pseudo :</th>
-                    <td>{{ form_widget(edit_form.pseudo) }}</td>
-                </tr>
-                <tr>
-                    <th>Prénom :</th>
-                    <td>{{ form_widget(edit_form.prenomParticipant) }}</td>
-                </tr>
-                <tr>
-                    <th>Nom :</th>
-                    <td>{{ form_widget(edit_form.nomParticipant) }}</td>
-                </tr>
-                <tr>
-                    <th>Téléphone :</th>
-                    <td>{{ form_widget(edit_form.telephoneParticipant) }}</td>
-                </tr>
-                <tr>
-                    <th>Email :</th>
-                    <td>{{ form_widget(edit_form.mailParticipant) }}</td>
-                </tr>
-                {#<tr>#}
-                {#<th>Mot de passe : </th>#}
-                {#<td>{{ form_widget(edit_form.motDePasseParticipant.first) }}</td>#}
-                {#</tr>#}
-                {#<tr>#}
-                {#<th>Confirmation mot de passe : </th>#}
-                {#<td>{{ form_widget(edit_form.motDePasseParticipant.second) }}</td>#}
-                {#</tr>#}
-                <tr>
-                    <th>Site :</th>
-                    <td>{{ form_widget(edit_form.site) }}</td>
-                </tr>
-                <tr>
-                    <th>Photo de profil :</th>
->>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
                     <td>{{ form_widget(edit_form.pathImage) }}</td>
                 </tr>
 
@@ -85,19 +49,11 @@
         <br>
     </div>
     <br><br><br>
-<<<<<<< HEAD
     <div class=" col-sm-2 col-sm-offset-1">
         {{ form_widget(edit_form.Enregistrer, {'attr': {'class': 'btn btn-primary'}}) }}
     </div>
     <div class="col-sm-2">
         <a class="btn btn-primary" href="{{ path('participant_afficherProfil', {'id': participant.id}) }}">Annuler</a>
-=======
-    <div class="col-sm-2 col-sm-offset-1">
-        {{ form_widget(edit_form.Enregistrer) }}
-    </div>
-    <div class="col-sm-2">
-        {{ form_widget(edit_form.Annuler) }}
->>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
     </div>
 
 

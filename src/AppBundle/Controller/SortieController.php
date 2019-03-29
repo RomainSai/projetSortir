@@ -35,10 +35,6 @@ class SortieController extends Controller
         $dateDuJour = new \DateTime();
         $dateDuJour->format('Y-m-d');
 
-
-        /*dump(date_diff($dateDuJour, $sortie->getDateDebutSortie())->days);
-        die();*/
-
         return $this->render('sortie/index.html.twig', array(
             'sorties' => $sorties,
             'dateDuJour' => $dateDuJour
