@@ -101,8 +101,12 @@ class Sortie
 
     /**
      * @var
+<<<<<<< HEAD
      * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie", cascade={"persist"})
+=======
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Lieu", inversedBy="sortie", cascade="persist")
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
      */
     private $lieu;
 

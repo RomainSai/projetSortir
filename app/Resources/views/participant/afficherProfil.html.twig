@@ -1,6 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block contenu %}
+<<<<<<< HEAD
     <!-- MESSAGE AFFICHE SI CREATION D'UN NOUVEl UTILISATEUR-->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
@@ -67,6 +68,57 @@ IL NE POURRA PAS ACCEDER AU LIEN "EDIT" DES AUTRES PARTICIPANTS-->
             <div class="col-sm-2 col-sm-offset-4">
                 <a class="btn btn-primary" href="{{ path('homepage')}}">Afficher les sorties</a>
             </div>
+=======
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+        {{ message }}
+        </div>
+    {% endfor %}
+    <h1 style="text-align: center">{{ participant.pseudo }}</h1>
+    <br><br><br>
+
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-1">
+            <img src="{{ asset(participant.getPathImage()) }}" alt="image toto">
+        </div>
+
+        <div class="col-sm-7 col-sm-offset-1">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Prenom : </th>
+                        <td>{{ participant.prenomParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Nom : </th>
+                        <td>{{ participant.nomParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Telephone : </th>
+                        <td>{{ participant.telephoneParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>E-Mail : </th>
+                        <td>{{ participant.mailParticipant }}</td>
+                    </tr>
+                    <br>
+                    <tr>
+                        <th>Ville de rattachement : </th>
+                        <td>{{ participant.getSite() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+  <br><br><br>
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-4">
+            <a class="btn btn-primary" href="{{ path('participant_edit', { 'id': participant.id }) }}">Modifier le profil</a>
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
         </div>
     </div>
 </div>

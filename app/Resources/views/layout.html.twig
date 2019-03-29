@@ -24,6 +24,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
+<<<<<<< HEAD
                 <button type="button" class="navbar-toggle collapsed " id="dlDropDown" data-toggle="collapse"
                         data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
@@ -31,11 +32,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+=======
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
                 <a class="navbar-brand" href="{{ path('homepage') }}">
                     <img alt="Logo" src="{{ asset('images/eniphoto.jpg') }}" class="pull-left">
                     <span class="stylelogo"> &nbsp; &nbsp; Sortir.com</span>
                 </a>
             </div>
+<<<<<<< HEAD
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {% block hyperlien %}
@@ -68,6 +72,22 @@
                 </ul>
             </div>
 
+=======
+            <ul class="nav navbar-nav navbar-right">
+                {% block hyperlien %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('ville_listeVilles') }}"><span></span> Villes</a></li>
+                    <li><a href="{{ path('site_index') }}"><span></span> Sites</a></li>
+                    {% endif %}
+                {% endblock %}
+                {% if app.user  %}
+                    <li><a href="{{ path('homepage') }}"><span></span> Accueil</a></li>
+                    <li><a href="{{ path('participant_afficherProfil', {id: app.user.id}) }}"><span></span> Mon Profil</a></li>
+                    <li><a href="{{ path('logout') }}"><span></span> Se déconnecter</a></li>
+                {% endif %}
+
+            </ul>
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
         </div>
     </nav>
 </header>
@@ -230,8 +250,12 @@
                                             {% endif %}
                                             {% if sortie.participants.contains(app.user) and sortie.etat == "Ouverte"%}
                                                 <li>
+<<<<<<< HEAD
                                                     <a href="{{ path('sortie_show', { 'id': sortie.id }) }}">Se
                                                         désister</a>
+=======
+                                                    <a href="{{ path('sortie_desister', { 'id': sortie.id }) }}">Se désister</a>
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
                                                 </li>
                                             {% else %}
                                                 {% if compteur < sortie.nbInscriptionMax and sortie.dateCloture >= dateDuJour and sortie.etat == "Ouverte"%}

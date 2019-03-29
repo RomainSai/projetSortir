@@ -66,8 +66,12 @@ class Lieu
 
     /**
      * @var
+<<<<<<< HEAD
      *@ORM\ManyToOne(targetEntity="AppBundle\Entity\Ville",inversedBy="lieu", cascade="persist")
      *
+=======
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ville",inversedBy="lieu", cascade="persist")
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
      */
     private $ville;
 

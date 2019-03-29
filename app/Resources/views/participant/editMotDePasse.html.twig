@@ -1,6 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block contenu %}
+<<<<<<< HEAD
     <h2 style="text-align: center">{{ participant.pseudo }}</h2>
     <br>
     <h2 style="text-align: center">Modifier Mot de Passe</h2>
@@ -30,8 +31,19 @@
 
     </div>
 
+=======
+    {{ form(form) }}
+    <div class="col-sm-2">
+        <a class="btn btn-primary" href="{{ path('participant_afficherProfil', {'id': app.user.id}) }}">Retour</a>
+    </div>
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
 {% endblock %}
 
 {% block body %}
 
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9

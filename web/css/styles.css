@@ -165,6 +165,10 @@ font-family: 'Srisakdi', cursive;
 
 footer{
     background: #375678;
+<<<<<<< HEAD
+=======
+    position: relative;
+>>>>>>> 4c29eb236ff2811102bd35ac83185bdafb7fb8b9
     color: #d5c5f2;
     text-align: center;
     bottom: 0;
