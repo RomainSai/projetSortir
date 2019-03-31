@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Sortie;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Exception\BadUrlException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class DefaultController extends Controller
 {
@@ -38,20 +40,28 @@ class DefaultController extends Controller
             //ajout de la duree de la sortie à la date de la sortie
             $duree = $sortie->getDureeSortie();
             $dateDebutSortie = $sortie->getDateDebutSortie();
-            $dateFinSortie = date('Y:m:d - H:i:s', strtotime("+{$duree} minutes"));
+            dump($dateDuJour);
+            $dateDebutSortie->modify('+' . $duree .' minutes');
 
+            dump($dateDebutSortie);
+            die();
+            dump($dateDuJour<$dateFinSortie);
             if ($dateFinSortie > $dateDuJour && $dateDuJour> $dateDebutSortie){
                 $etat = $em->getRepository('AppBundle:Etat')->find(3);
                 $sortie->setEtat($etat);
-            }elseif ($dateDuJour>$dateFinSortie){
+            }elseif ($dateDuJour<$dateDebutSortie){
+                $etat = $em->getRepository('AppBundle:Etat')->find(2);
+                $sortie->setEtat($etat);
+            } elseif ($dateDuJour>$dateFinSortie){
                 $etat = $em->getRepository('AppBundle:Etat')->find(4);
                 $sortie->setEtat($etat);
             }
+
             $em->persist($sortie);
             $em->flush();
         }
 
-        // replace this example code with whatever you need
+
         return $this->render('layout.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'sites'=>$sites,

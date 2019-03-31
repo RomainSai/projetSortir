@@ -132,12 +132,14 @@ class SortieController extends Controller
 
             if ($editForm->isSubmitted() && $editForm->isValid()) {
                 $valeurButtonSubmit = ($request->request->get('button'));
+                dump($valeurButtonSubmit);
                 $em = $this->getDoctrine()->getManager();
-                if ($valeurButtonSubmit == "Créer") {
+                if ($valeurButtonSubmit == "Enregistrer") {
                     $etat = $em->getRepository('AppBundle:Etat')->find(1);
                     $sortie->setEtat($etat);
-                } elseif ($valeurButtonSubmit == "Ouverte") {
+                } elseif ($valeurButtonSubmit == "Valider") {
                     $etat = $em->getRepository('AppBundle:Etat')->find(2);
+                    dump($etat);
                     $sortie->setEtat($etat);
                 } else {
                     $etat = $em->getRepository('AppBundle:Etat')->find(5);
